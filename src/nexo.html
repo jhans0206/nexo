@@ -506,7 +506,7 @@ function donut(byCat){
 
 // ---------- views ----------
 function header(title, sub){
-  return `<header class="top"><div class="brand">NE<i>X</i>O</div><button class="link" data-act="theme" aria-label="Cambiar tema">Tema</button></header>
+  return `<header class="top"><div class="row" style="gap:8px;align-items:baseline"><div class="brand">NE<i>X</i>O</div><span class="hint" style="font-size:11px">v22-nov</span></div><button class="link" data-act="theme" aria-label="Cambiar tema">Tema</button></header>
   ${mode==="demo"?`<div class="demo"><span>DEMO: datos de ejemplo, no se guardan</span><button data-act="exitdemo">Salir</button></div>`:""}
   ${loadNote?`<div class="demo">${esc(loadNote)}</div>`:""}
   ${title?`<h1>${title}</h1>${sub?`<div class="sub" style="margin-bottom:14px">${sub}</div>`:""}`:""}`;
