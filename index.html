@@ -281,6 +281,7 @@ function cardCycle(a){
     if(t.t==="transfer" && t.to===a.id) paidSince += t.a;
     if(t.t==="gasto" && t.acc===a.id) newPurch += t.a;
     if(t.t==="devolucion" && t.acc===a.id) newPurch -= t.a;
+    if(t.t==="ajuste" && t.acc===a.id) newPurch -= t.a;
   }
   const debt = Math.max(0, -balance(a.id));
   const toPay = Math.max(0, debtAtClose - unbilled - paidSince);
@@ -289,7 +290,8 @@ function cardCycle(a){
 // Charges come only from what the person typed from their statement or from the bank's official page (source + date stored on the card).
 function cardCharges(a, c){
   const out = []; let extra = 0;
-  if(a.desgRate){ const est = Math.min(Math.round(c.debt * a.desgRate/100), a.desgCap||Infinity); if(c.debt>0){ out.push(`Desgravamen estimado: ${money(est)} (${a.desgRate}% del saldo promedio${a.desgCap?`, tope ${money(a.desgCap)}`:""})`); extra += est; } }
+  if(a.desgRate){ const est = Math.min(Math.round(c.debt * a.desgRate/100), a.desgCap||Infinity);
+    out.push(`Seguro de desgravamen: ${a.desgRate}% mensual del saldo promedio${a.desgCap?`, tope ${money(a.desgCap)}`:""}. Estimado este mes: ${money(est)}.`); extra += est; }
   else if(a.desgLast) out.push(`Desgravamen: el último cobro fue ${money(a.desgLast)}; varía según tu deuda.`);
   if(a.fee && a.feeMonth){ const nm = Number(c.nextClose.slice(5,7)); if(nm===a.feeMonth){ out.push(`Este cierre cobran la membresía: ${money(a.fee)}${a.feeWaiver?` (${a.feeWaiver})`:""}`); extra += a.fee; } }
   return {out, extra};
@@ -832,7 +834,10 @@ function accSheet(a){
       <div class="hint">Copia estos datos de tu estado de cuenta o de la hoja resumen de tu tarjeta. NEXO no inventa tasas.</div>
     </div>
     ${!isCard?`<div class="field"><label>Saldo mínimo para no pagar comisión (S/)</label><input class="inp" id="aMin" inputmode="decimal" value="${a.minBal?(a.minBal/100).toFixed(2):""}" placeholder="Opcional"></div>`:""}
-    ${!isNew?`<div class="field"><label>Ajustar ${isCard?"deuda":"saldo"} a (S/)</label><input class="inp" id="aAdj" inputmode="decimal" placeholder="Lo que dice tu banco hoy"></div><div class="hint">Crea un "ajuste de saldo" que no cuenta como gasto ni ingreso.</div>`:""}
+    ${!isNew&&isCard?`<div class="card stack" style="gap:10px"><div style="font-weight:600">Copiar de la app de tu banco</div>
+      <div class="grid2"><div class="field"><label>Pago del mes (S/)</label><input class="inp" id="aBill" inputmode="decimal" placeholder="ej. 8,393.74"></div><div class="field"><label>Deuda total hoy (S/)</label><input class="inp" id="aAdj" inputmode="decimal" placeholder="ej. 8,600.19"></div></div>
+      <div class="hint">"Pago del mes" es lo que facturó tu último estado de cuenta. NEXO lo registra como ajuste: no cuenta como gasto.</div></div>`:""}
+    ${!isNew&&!isCard?`<div class="field"><label>Ajustar saldo a (S/)</label><input class="inp" id="aAdj" inputmode="decimal" placeholder="Lo que dice tu banco hoy"></div><div class="hint">Crea un "ajuste de saldo" que no cuenta como gasto ni ingreso.</div>`:""}
     <button class="btn pri block" id="aSave">Guardar</button>
     ${!isNew?`<button class="btn danger" id="aDel">Eliminar cuenta</button><div id="aDelC" class="card row between" hidden><span class="hint">Sus movimientos quedan en el historial.</span><button class="btn danger" id="aDelY">Eliminar</button></div>`:""}
   </div>`, ()=>{
@@ -844,6 +849,14 @@ function accSheet(a){
       if($("#aMin")) a.minBal = toCents($("#aMin").value)||0;
       if(isNew) cfg.accounts.push(a); else cfg.accounts = cfg.accounts.map(x=>x.id===a.id?a:x);
       saveCfg();
+      const billEl = $("#aBill");
+      if(billEl && billEl.value.trim() && a.type==="tarjeta"){
+        const bill = toCents(billEl.value);
+        if(isFinite(bill)){ const c = cardCycle(a); let paid = 0; for(const t of txs) if(t.t==="transfer" && t.to===a.id && t.d.slice(0,10) > c.lastClose) paid += t.a;
+          const unb = c.inst.reduce((s,x)=>s + (x.t.d.slice(0,10)<=c.lastClose ? x.left : 0),0);
+          const diff = -(bill + paid + unb) - balance(a.id, c.lastClose);
+          if(diff){ const t = {id:uid(), t:"ajuste", a:diff, d:c.lastClose+"T23:00", desc:"Ajuste estado de cuenta", cat:"", acc:a.id, src:"manual"}; txs.push(t); saveMonths([ym(t.d)]); } }
+      }
       const adjEl = $("#aAdj");
       if(adjEl && adjEl.value.trim()){
         const target = toCents(adjEl.value); if(isFinite(target)){ const want = a.type==="tarjeta"? -Math.abs(target) : target; const diff = want - balance(a.id);
