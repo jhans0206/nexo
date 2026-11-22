@@ -1,0 +1,1090 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0E6B5C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="NEXO">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style>
+</head><body>
+<title>NEXO</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap">
+<style>
+/* Layout: single phone column, sticky header, fixed bottom tab bar with central add button */
+:root{
+  --bg:#EEF2F0; --card:#FFFFFF; --ink:#0F1A17; --muted:#5D6B67; --line:#DCE3E0;
+  --accent:#0E6B5C; --accent-ink:#FFFFFF; --accent-soft:#DDEEEA;
+  --good:#1F8A4C; --warn:#B7791F; --bad:#C2413B; --chip:#E4EAE7;
+  --c1:#0E6B5C; --c2:#3B82C4; --c3:#C98A2B; --c4:#9B5DB8; --c5:#D0574F; --c6:#7A8B86;
+  --display:"Manrope",system-ui,-apple-system,sans-serif; --body:"Inter",system-ui,-apple-system,sans-serif;
+  --r:20px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0C1110; --card:#161D1B; --ink:#E9F0ED; --muted:#93A39E; --line:#26302D;
+  --accent:#3FBFA6; --accent-ink:#06201B; --accent-soft:#16302B;
+  --good:#4CC57F; --warn:#E3A84A; --bad:#EF7A72; --chip:#212A27;
+  --c1:#3FBFA6; --c2:#6AA8E0; --c3:#E0AA55; --c4:#B98AD3; --c5:#EF7A72; --c6:#8E9E99; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C1110; --card:#161D1B; --ink:#E9F0ED; --muted:#93A39E; --line:#26302D;
+  --accent:#3FBFA6; --accent-ink:#06201B; --accent-soft:#16302B;
+  --good:#4CC57F; --warn:#E3A84A; --bad:#EF7A72; --chip:#212A27;
+  --c1:#3FBFA6; --c2:#6AA8E0; --c3:#E0AA55; --c4:#B98AD3; --c5:#EF7A72; --c6:#8E9E99; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--body);font-size:15px;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+.app{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px calc(110px + env(safe-area-inset-bottom,0px))}
+header.top{display:flex;align-items:center;justify-content:space-between;padding:10px 0 14px}
+.brand{font-family:var(--display);font-weight:800;letter-spacing:.14em;font-size:15px}
+.brand i{font-style:normal;color:var(--accent)}
+.sub{color:var(--muted);font-size:13px}
+h1{font-family:var(--display);font-size:26px;margin:0 0 4px;text-wrap:balance}
+h2{font-family:var(--display);font-size:17px;margin:0}
+.card{background:var(--card);border-radius:var(--r);padding:16px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;align-items:center;gap:10px}
+.between{justify-content:space-between}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hero{background:var(--accent);color:var(--accent-ink);border-radius:24px;padding:20px}
+.hero .label{color:inherit;opacity:.85;font-size:13px}
+.hero .big{font-family:var(--display);font-size:36px;font-weight:800;margin:4px 0 14px}
+.hero .split{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px}
+.hero .split b{display:block;font-size:16px;font-family:var(--display)}
+.label{color:var(--muted);font-size:12.5px;letter-spacing:.02em}
+.val{font-family:var(--display);font-weight:700;font-size:20px}
+.pos{color:var(--good)} .neg{color:var(--bad)} .warnc{color:var(--warn)}
+.list{display:flex;flex-direction:column}
+.item{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line);background:none;border-left:0;border-right:0;border-bottom:0;width:100%;text-align:left;cursor:pointer}
+.item:first-child{border-top:0}
+.dot{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none;color:#fff}
+.grow{flex:1;min-width:0}
+.ellip{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.amt{font-family:var(--display);font-weight:700;white-space:nowrap}
+.daylbl{font-size:12px;color:var(--muted);margin:14px 2px 4px;text-transform:capitalize}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chip{border:0;background:var(--chip);border-radius:999px;padding:8px 13px;font-size:13.5px;white-space:nowrap;cursor:pointer}
+.chip.on{background:var(--ink);color:var(--bg)}
+.btn{border:0;border-radius:14px;padding:13px 16px;font-weight:600;cursor:pointer;background:var(--chip)}
+.btn.pri{background:var(--accent);color:var(--accent-ink)}
+.btn.danger{background:transparent;color:var(--bad)}
+.btn.block{width:100%}
+.link{background:none;border:0;color:var(--accent);font-weight:600;cursor:pointer;padding:4px 0}
+.bar{height:8px;border-radius:99px;background:var(--chip);overflow:hidden}
+.bar>span{display:block;height:100%;border-radius:99px;background:var(--accent)}
+.tip{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.45}
+.tip:first-of-type{border-top:0}
+.tip .ic{width:8px;height:8px;border-radius:50%;margin-top:7px;flex:none;background:var(--accent)}
+.tip.w .ic{background:var(--warn)} .tip.b .ic{background:var(--bad)}
+.demo{background:var(--warn);color:#1b1404;border-radius:12px;padding:8px 12px;font-size:13px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.demo button{background:#1b1404;color:#fff;border:0;border-radius:8px;padding:6px 10px;font-size:12.5px}
+/* credit card visual */
+.cc{border-radius:20px;padding:18px;color:#fff;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.cc.interbank{background:linear-gradient(135deg,#0B8F5A,#06603D)}
+.cc.bcp{background:linear-gradient(135deg,#1E4FA8,#0F2E6E)}
+.cc.otro{background:linear-gradient(135deg,#3C4A47,#1E2725)}
+.cc .bank{font-family:var(--display);font-weight:800;letter-spacing:.06em}
+.cc .debt{font-family:var(--display);font-size:28px;font-weight:800}
+.cc .meta{display:flex;justify-content:space-between;font-size:12.5px;opacity:.9}
+.cc .bar{background:rgba(255,255,255,.25)} .cc .bar>span{background:#fff}
+/* nav */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:center}
+nav.tabs a{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--muted);text-decoration:none;padding:6px 0}
+nav.tabs a.on{color:var(--accent);font-weight:600}
+nav.tabs svg{width:23px;height:23px}
+nav.tabs .add{justify-self:center;width:56px;height:56px;border-radius:18px;background:var(--accent);color:var(--accent-ink);border:0;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 35%,transparent)}
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:30;opacity:0;transition:opacity .2s}
+.scrim.show{opacity:1}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:31;background:var(--bg);border-radius:24px 24px 0 0;max-height:92%;overflow-y:auto;transform:translateY(100%);transition:transform .24s ease;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.sheet.show{transform:none}
+.sheet .in{max-width:560px;margin:0 auto}
+.grab{width:40px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 12px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12.5px;color:var(--muted)}
+.inp{width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:16px;min-width:0}
+.inp:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.amount-inp{font-family:var(--display);font-size:34px;font-weight:800;text-align:center;border:0;background:transparent;padding:6px}
+.seg{display:flex;background:var(--chip);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:transparent;padding:9px 4px;border-radius:9px;font-size:13.5px;cursor:pointer}
+.seg button.on{background:var(--card);font-weight:600}
+.hint{font-size:12.5px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;z-index:40;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+.empty{text-align:center;color:var(--muted);padding:24px 8px}
+svg text{fill:var(--muted);font-size:10px;font-family:var(--body)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app" id="app"><div class="empty">Cargando NEXO…</div></div>
+<nav class="tabs" id="nav" hidden><div class="in">
+  <a href="#inicio" data-v="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Inicio</a>
+  <a href="#movs" data-v="movs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Movimientos</a>
+  <button class="add" id="addBtn" aria-label="Registrar movimiento"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button>
+  <a href="#tarjetas" data-v="tarjetas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18"/></svg>Tarjetas</a>
+  <a href="#mas" data-v="mas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="9" r="3.2"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg>Metas y auto</a>
+</div></nav>
+<div class="scrim" id="scrim" hidden></div>
+<div class="sheet" id="sheet" hidden><div class="in" id="sheetIn"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+// ---------- constants ----------
+const CATS = {
+  gasto: ["Alimentación","Restaurantes","Supermercado","Transporte","Salud","Educación","Tecnología","Entretenimiento","Ropa","Servicios","Suscripciones","Vivienda","Gimnasio","Cargos financieros","Otros"],
+  auto: ["Combustible","Mantenimiento","Reparaciones","Seguro vehicular","SOAT","Estacionamiento","Peajes","Lavado","Repuestos","Impuestos vehiculares","Otros del auto"],
+  ingreso: ["Sueldo","Bonificaciones","Trabajos adicionales","Transferencias recibidas","Otros ingresos"]
+};
+const AUTO_SET = new Set(CATS.auto);
+// Starting accounts. Personal accounts and card terms are loaded from a private backup file, never stored in this public code.
+const SETUP_ACCOUNTS = [
+  {id:"bco", name:"Cuenta bancaria", type:"banco"},
+  {id:"yape", name:"Yape", type:"yape"},
+  {id:"efe", name:"Efectivo", type:"efectivo"},
+  {id:"tc1", name:"Tarjeta de crédito", type:"tarjeta", bank:"otro", hint:"Copia la línea, días de cierre y pago, y la TEA de tu estado de cuenta."},
+];
+const KEYWORDS = [
+  ["Combustible",["grifo","gasolina","combustible","primax","repsol","petroperu","pecsa","gasol","glp","diesel"]],
+  ["Peajes",["peaje","rutas de lima","lima expresa","linea amarilla","línea amarilla"]],
+  ["Estacionamiento",["estacionamiento","parking","cochera","los portales"]],
+  ["Lavado",["lavado","car wash"]],
+  ["SOAT",["soat"]],
+  ["Mantenimiento",["aceite","mantenimiento","afinamiento","alineamiento","llanta","neumatico","neumático","frenos","bateria","batería"]],
+  ["Supermercado",["plaza vea","plazavea","tottus","wong","metro","vivanda","makro","mass","tambo","oxxo","mercado","bodega","supermercado"]],
+  ["Restaurantes",["restaurante","rappi","pedidosya","kfc","bembos","mcdonald","starbucks","pizza","chifa","cevich","pollo","burger","café","cafe","cena"]],
+  ["Alimentación",["almuerzo","desayuno","menu","menú","comida","lonche","snack","panaderia","panadería"]],
+  ["Transporte",["uber","taxi","cabify","didi","indrive","bus","metropolitano","pasaje","combi"]],
+  ["Salud",["farmacia","inkafarma","mifarma","clinica","clínica","doctor","medic","dentista","laboratorio"]],
+  ["Suscripciones",["netflix","spotify","disney","hbo","max","prime","youtube","icloud","apple","chatgpt","claude","google one"]],
+  ["Servicios",["luz","enel","luz del sur","sedapal","agua","claro","movistar","entel","bitel","internet","gas natural","calidda","cálidda"]],
+  ["Vivienda",["alquiler","renta","mantenimiento edificio","condominio"]],
+  ["Gimnasio",["gym","gimnasio","smart fit","smartfit","bodytech"]],
+  ["Educación",["curso","universidad","pucp","libro","matricula","matrícula","udemy","colegio"]],
+  ["Tecnología",["ripley","saga","falabella","celular","laptop","audifono","audífono","cargador","tecnolog"]],
+  ["Entretenimiento",["cine","cineplanet","cinemark","concierto","teleticket","joinnus","juego","bar","discoteca"]],
+  ["Ropa",["ropa","zapatilla","zara","h&m","polo","pantalon","pantalón"]],
+  ["Cargos financieros",["desgravamen","membresia","membresía","interes","interés","comision","comisión"]],
+  ["Sueldo",["sueldo","salario","planilla","quincena"]],
+  ["Bonificaciones",["bono","gratificacion","gratificación","cts","utilidades"]],
+];
+const PALETTE = ["--c1","--c2","--c3","--c4","--c5","--c6"];
+const MONTHS = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const MSHORT = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const TYPE_LBL = {gasto:"Gasto",ingreso:"Ingreso",transfer:"Transferencia",devolucion:"Devolución",ajuste:"Ajuste de saldo"};
+const ACC_LBL = {banco:"Cuenta bancaria",yape:"Yape",efectivo:"Efectivo",tarjeta:"Tarjeta de crédito"};
+
+// ---------- state ----------
+let cfg = null;            // {accounts, goals, vehicle, reminders}
+let txs = [];              // all movements
+let mode = "loading";      // db | local | demo
+let col = null;            // db collection
+let view = "inicio";
+let movMonth = null, movFilter = {t:"todos", acc:"", cat:""};
+let loadTimer = null, loadNote = "";
+
+// ---------- helpers ----------
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+const money = c => { const v = Math.abs(c)/100; return (c<0?"−":"") + "S/ " + v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); };
+const toCents = s => { const n = parseFloat(String(s).replace(/,/g,"").replace(/[^0-9.\-]/g,"")); return isFinite(n) ? Math.round(n*100) : NaN; };
+const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function limaNow(){
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-CA",{timeZone:"America/Lima",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date()).map(x=>[x.type,x.value]));
+  return `${p.year}-${p.month}-${p.day}T${p.hour==="24"?"00":p.hour}:${p.minute}`;
+}
+const today = () => limaNow().slice(0,10);
+const ym = d => d.slice(0,7);
+const addMonths = (m, k) => { let [y,mo] = m.split("-").map(Number); mo += k; while(mo>12){mo-=12;y++} while(mo<1){mo+=12;y--} return `${y}-${String(mo).padStart(2,"0")}`; };
+const daysIn = (y,m) => new Date(Date.UTC(y,m,0)).getUTCDate();
+const dayDate = (m, day) => { const [y,mo] = m.split("-").map(Number); return `${m}-${String(Math.min(day, daysIn(y,mo))).padStart(2,"0")}`; };
+const daysBetween = (a,b) => Math.round((Date.parse(b+"T00:00:00Z") - Date.parse(a+"T00:00:00Z"))/864e5);
+const prettyDay = d => { const [y,m,dd] = d.split("-").map(Number); const wd = new Date(Date.UTC(y,m-1,dd)).toLocaleDateString("es-PE",{weekday:"long",timeZone:"UTC"}); return `${wd} ${dd} de ${MONTHS[m-1]}`; };
+const shortDay = d => { const [,m,dd] = d.split("-").map(Number); return `${dd} ${MSHORT[m-1]}`; };
+const monthName = m => { const [y,mo] = m.split("-").map(Number); return `${MONTHS[mo-1]} ${y}`; };
+function guessCat(desc, kind){
+  const s = (desc||"").toLowerCase();
+  if(!s.trim()) return null;
+  const prev = txs.slice().reverse().find(t => t.desc && t.desc.toLowerCase().trim() === s.trim() && t.cat);
+  if(prev && (kind!=="ingreso" || CATS.ingreso.includes(prev.cat))) return prev.cat;
+  for(const [cat, words] of KEYWORDS){
+    const isInc = CATS.ingreso.includes(cat);
+    if((kind==="ingreso") !== isInc) continue;
+    if(words.some(w => s.includes(w))) return cat;
+  }
+  return null;
+}
+function catColor(cat){ let h=0; for(const ch of cat) h=(h*31+ch.charCodeAt(0))>>>0; return `var(${PALETTE[h%PALETTE.length]})`; }
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),2200); }
+const acc = id => cfg.accounts.find(a=>a.id===id);
+const accName = id => acc(id)?.name || "Cuenta eliminada";
+
+// ---------- finance core ----------
+// A card purchase is an expense on its date and raises that card's debt.
+// Paying a card is a transfer bank -> card: it lowers cash and debt, never a second expense.
+function balance(accId, until){
+  const a = acc(accId); if(!a) return 0;
+  let b = a.initial||0;
+  for(const t of txs){
+    if(until && t.d.slice(0,10) > until) continue;
+    if(t.t==="gasto" && t.acc===accId) b -= t.a;
+    else if((t.t==="ingreso"||t.t==="devolucion") && t.acc===accId) b += t.a;
+    else if(t.t==="transfer"){ if(t.acc===accId) b -= t.a; if(t.to===accId) b += t.a; }
+    else if(t.t==="ajuste" && t.acc===accId) b += t.a;
+  }
+  return b;
+}
+function monthTotals(m){
+  let inc=0, exp=0, auto=0; const byCat = {};
+  for(const t of txs){
+    if(ym(t.d)!==m) continue;
+    if(t.t==="ingreso") inc += t.a;
+    else if(t.t==="gasto"||t.t==="devolucion"){
+      const s = t.t==="gasto" ? t.a : -t.a;
+      exp += s; byCat[t.cat] = (byCat[t.cat]||0) + s;
+      if(AUTO_SET.has(t.cat)) auto += s;
+    }
+  }
+  return {inc, exp, auto, byCat};
+}
+function cardCycle(a){
+  const td = today(), cm = ym(td);
+  let lastClose = dayDate(cm, a.closeDay||1);
+  if(lastClose > td) lastClose = dayDate(addMonths(cm,-1), a.closeDay||1);
+  const nextClose = dayDate(addMonths(ym(lastClose),1), a.closeDay||1);
+  let payDate = dayDate(ym(lastClose), a.payDay||1);
+  if(payDate <= lastClose) payDate = dayDate(addMonths(ym(lastClose),1), a.payDay||1);
+  let nextPay = dayDate(ym(nextClose), a.payDay||1);
+  if(nextPay <= nextClose) nextPay = dayDate(addMonths(ym(nextClose),1), a.payDay||1);
+  const debtAtClose = Math.max(0, -balance(a.id, lastClose));
+  const cd = a.closeDay||1;
+  let paidSince = 0, newPurch = 0, unbilled = 0; const inst = [];
+  for(const t of txs){
+    const d = t.d.slice(0,10);
+    if(t.t==="gasto" && t.acc===a.id && t.cuotas>1){
+      const bl = billed(t,lastClose,cd), bn = billed(t,nextClose,cd);
+      if(d <= lastClose) unbilled += t.a - instPart(t,bl);
+      newPurch += instPart(t,bn) - instPart(t,bl);
+      if(bl < t.cuotas) inst.push({t, next: Math.min(bl+1,t.cuotas), each: Math.round(t.a/t.cuotas), left: t.a - instPart(t,bl)});
+      continue;
+    }
+    if(d <= lastClose) continue;
+    if(t.t==="transfer" && t.to===a.id) paidSince += t.a;
+    if(t.t==="gasto" && t.acc===a.id) newPurch += t.a;
+    if(t.t==="devolucion" && t.acc===a.id) newPurch -= t.a;
+  }
+  const debt = Math.max(0, -balance(a.id));
+  const toPay = Math.max(0, debtAtClose - unbilled - paidSince);
+  return {lastClose, nextClose, payDate, nextPay, debt, toPay, newPurch:Math.max(0,newPurch), avail:(a.limit||0) - debt, inst};
+}
+// Charges come only from what the person typed from their statement or from the bank's official page (source + date stored on the card).
+function cardCharges(a, c){
+  const out = []; let extra = 0;
+  if(a.desgRate){ const est = Math.min(Math.round(c.debt * a.desgRate/100), a.desgCap||Infinity); if(c.debt>0){ out.push(`Desgravamen estimado: ${money(est)} (${a.desgRate}% del saldo promedio${a.desgCap?`, tope ${money(a.desgCap)}`:""})`); extra += est; } }
+  else if(a.desgLast) out.push(`Desgravamen: el último cobro fue ${money(a.desgLast)}; varía según tu deuda.`);
+  if(a.fee && a.feeMonth){ const nm = Number(c.nextClose.slice(5,7)); if(nm===a.feeMonth){ out.push(`Este cierre cobran la membresía: ${money(a.fee)}${a.feeWaiver?` (${a.feeWaiver})`:""}`); extra += a.fee; } }
+  return {out, extra};
+}
+function summary(){
+  const liquid = cfg.accounts.filter(a=>a.type!=="tarjeta").reduce((s,a)=>s+balance(a.id),0);
+  const cards = cfg.accounts.filter(a=>a.type==="tarjeta");
+  const debt = cards.reduce((s,a)=>s+Math.max(0,-balance(a.id)),0);
+  const saved = cfg.goals.reduce((s,g)=>s+goalSaved(g),0);
+  const fixedDue = fixedPending(ym(today())).reduce((s,f)=>s+f.a,0);
+  const minHold = cfg.accounts.filter(a=>a.type!=="tarjeta").reduce((s,a)=>s+Math.min(Math.max(0,balance(a.id)), a.minBal||0),0);
+  return {liquid, debt, saved, fixedDue, minHold, free: liquid - debt - saved - fixedDue - minHold};
+}
+const fixedPending = m => (cfg.fixed||[]).filter(f=>!(f.paid||[]).includes(m));
+function budgetRows(m){
+  const by = monthTotals(m).byCat;
+  return Object.entries(cfg.budgets||{}).filter(([,l])=>l>0).map(([cat,l])=>({cat, l, used: by[cat]||0, pct:(by[cat]||0)/l})).sort((a,b)=>b.pct-a.pct);
+}
+function monthsSpan(a,b){ const out=[]; let m=a; while(m<=b){ out.push(m); m=addMonths(m,1); } return out; }
+// installments: how many of a purchase's installments a card statement closing on C has billed
+function billed(t, C, closeDay){
+  const d = t.d.slice(0,10); if(d > C) return 0;
+  let k = 0; for(const m of monthsSpan(ym(d), ym(C))){ const c = dayDate(m, closeDay); if(c > d && c <= C) k++; }
+  return Math.min(k, t.cuotas);
+}
+const instPart = (t,k) => Math.round(t.a*k/t.cuotas);
+const dueTxt = d => { const k = daysBetween(today(), d); return `Vence ${shortDay(d)} · ${k>0?`en ${k} días`:k===0?"hoy":"vencido"}`; };
+const goalSaved = g => (g.contribs||[]).reduce((s,c)=>s+c.a,0);
+function goalPlan(g){
+  const saved = goalSaved(g), left = Math.max(0, g.target - saved);
+  if(!g.date) return {saved,left};
+  const days = daysBetween(today(), g.date);
+  if(days <= 0) return {saved,left,late:left>0};
+  const months = Math.max(days/30.44, 1/4.35);
+  return {saved,left,perMonth:Math.ceil(left/months), perWeek:Math.ceil(left/(days/7)), days};
+}
+function fuelStats(){
+  const f = txs.filter(t=>t.fuel && t.t==="gasto").sort((a,b)=>a.d.localeCompare(b.d) || (a.fuel.km||0)-(b.fuel.km||0));
+  const rows = []; let warn = [];
+  for(let i=0;i<f.length;i++){
+    const t = f[i], prev = f[i-1];
+    let dist = null, eff = null;
+    if(prev && t.fuel.km && prev.fuel.km){
+      dist = t.fuel.km - prev.fuel.km;
+      if(dist <= 0){ warn.push(`El kilometraje del ${shortDay(t.d.slice(0,10))} (${t.fuel.km.toLocaleString("en-US")} km) no es mayor que el de la carga anterior.`); dist = null; }
+      else if(t.fuel.q) eff = dist / t.fuel.q;
+    }
+    rows.push({t, dist, eff, ppu: t.fuel.q ? t.a/t.fuel.q : null});
+  }
+  const withEff = rows.filter(r=>r.eff);
+  const km = withEff.reduce((s,r)=>s+r.dist,0), q = withEff.reduce((s,r)=>s+r.t.fuel.q,0);
+  const spentEff = withEff.reduce((s,r)=>s+r.t.a,0);
+  const totQ = rows.reduce((s,r)=>s+(r.t.fuel.q||0),0), totA = rows.reduce((s,r)=>s+r.t.a,0);
+  return {rows: rows.reverse(), warn, avgEff: q? km/q : null, costKm: km? spentEff/km : null, avgPpu: totQ? totA/totQ : null, km};
+}
+
+// ---------- assistant tips (only from real records) ----------
+function tips(){
+  const out = []; const td = today(), m = ym(td), pm = addMonths(m,-1);
+  const cur = monthTotals(m), prev = monthTotals(pm);
+  const dayN = Number(td.slice(8)), [y,mo] = m.split("-").map(Number), dim = daysIn(y,mo);
+  if(txs.length < 5){ out.push({l:"",t:"Aún hay pocos movimientos para darte consejos confiables. Registra tus gastos unos días y aquí verás un análisis."}); }
+  for(const a of cfg.accounts.filter(a=>a.type==="tarjeta")){
+    const c = cardCycle(a);
+    const dleft = daysBetween(td, c.payDate);
+    if(c.toPay>0 && dleft>=0 && dleft<=7) out.push({l:"b",t:`Paga ${money(c.toPay)} de tu ${esc(a.name)} antes del ${shortDay(c.payDate)} (faltan ${dleft} días) para no pagar intereses.`});
+    if(a.limit && c.debt/a.limit > .7) out.push({l:"w",t:`Usas el ${Math.round(c.debt/a.limit*100)}% de la línea de tu ${esc(a.name)}. Por encima del 30% sube tu costo y tu riesgo.`});
+  }
+  if(prev.exp>0 && cur.exp>0 && dayN>=5){
+    const pace = cur.exp/dayN*dim;
+    if(pace > prev.exp*1.15) out.push({l:"w",t:`A este ritmo cerrarías ${MONTHS[mo-1]} con ${money(Math.round(pace))} en gastos, ${Math.round((pace/prev.exp-1)*100)}% más que el mes pasado (proyección).`});
+  }
+  for(const [cat,v] of Object.entries(cur.byCat)){
+    const p = prev.byCat[cat]||0;
+    if(p>2000 && v > p*1.4 && v-p > 5000) out.push({l:"w",t:`${esc(cat)}: llevas ${money(v)} este mes, frente a ${money(p)} en todo el mes pasado.`});
+  }
+  const top = Object.entries(cur.byCat).sort((a,b)=>b[1]-a[1])[0];
+  if(top && cur.exp>0) out.push({l:"",t:`Tu mayor gasto de ${MONTHS[mo-1]} es ${esc(top[0])}: ${money(top[1])} (${Math.round(top[1]/cur.exp*100)}% del total).`});
+  // possible duplicates
+  const seen = {};
+  for(const t of txs.filter(t=>t.t==="gasto" && t.d.slice(0,10) >= addDays(td,-14))){
+    const k = t.d.slice(0,10)+"|"+t.a+"|"+(t.desc||"").toLowerCase();
+    if(seen[k]){ out.push({l:"w",t:`Posible duplicado: "${esc(t.desc)}" por ${money(t.a)} aparece dos veces el ${shortDay(t.d.slice(0,10))}.`}); break; }
+    seen[k]=1;
+  }
+  // recurring (subscriptions)
+  const byDesc = {};
+  for(const t of txs.filter(t=>t.t==="gasto" && t.desc)){ const k=t.desc.toLowerCase().trim(); (byDesc[k] ||= new Set()).add(ym(t.d)); }
+  const rec = Object.entries(byDesc).filter(([,s])=>s.size>=3).map(([k])=>k);
+  if(rec.length) out.push({l:"",t:`Pagos que se repiten cada mes: ${rec.slice(0,4).map(esc).join(", ")}. Revisa si todos siguen valiendo la pena.`});
+  for(const g of cfg.goals){
+    const p = goalPlan(g);
+    if(p.perMonth && cur.inc>0 && (cur.inc - cur.exp) < p.perMonth) out.push({l:"w",t:`Para "${esc(g.name)}" necesitas apartar ${money(p.perMonth)} al mes, y este mes te queda ${money(cur.inc-cur.exp)} entre ingresos y gastos.`});
+    if(p.late) out.push({l:"b",t:`La fecha de "${esc(g.name)}" ya pasó y faltan ${money(p.left)}. Ponle una fecha nueva.`});
+  }
+  for(const r of (cfg.reminders||[])){
+    if(!r.date) continue; const d = daysBetween(td, r.date);
+    if(d < 0) out.push({l:"b",t:`${esc(r.name)} venció el ${shortDay(r.date)}.`});
+    else if(d <= 30) out.push({l:"w",t:`${esc(r.name)} vence en ${d} días (${shortDay(r.date)}).`});
+  }
+  for(const a of cfg.accounts.filter(a=>a.minBal)){ const b = balance(a.id); if(b < a.minBal) out.push({l:"b",t:`${esc(a.name)} tiene ${money(b)}, por debajo de ${money(a.minBal)}. Podrían cobrarte comisión.`}); else if(b - a.minBal < 20000) out.push({l:"w",t:`${esc(a.name)} está a ${money(b - a.minBal)} de bajar del mínimo de ${money(a.minBal)}.`}); }
+  for(const b of budgetRows(m)){
+    if(b.pct>=1) out.push({l:"b",t:`Pasaste tu presupuesto de ${esc(b.cat)}: ${money(b.used)} de ${money(b.l)}.`});
+    else if(b.pct>=.8) out.push({l:"w",t:`Llevas el ${Math.round(b.pct*100)}% de tu presupuesto de ${esc(b.cat)} (${money(b.used)} de ${money(b.l)}).`});
+  }
+  for(const f of fixedPending(m)){ const d = daysBetween(td, dayDate(m,f.day||1)); if(d<0) out.push({l:"b",t:`${esc(f.name)} (${money(f.a)}) venció el ${shortDay(dayDate(m,f.day||1))} y no está marcado como pagado.`}); else if(d<=3) out.push({l:"w",t:`${esc(f.name)} vence en ${d} días: ${money(f.a)}.`}); }
+  if(mode==="local" && txs.length>20){ let lb=null; try{ lb = localStorage.getItem("nexo-lastbackup"); }catch(e){} if(!lb || daysBetween(lb, td) > 30) out.push({l:"w",t:`Hace más de un mes que no sacas una copia de seguridad. Hazlo en Metas y auto → Ajustes.`}); }
+  if(cur.inc>0 && cur.exp>0){ const rate = (cur.inc-cur.exp)/cur.inc; if(rate>=0.2) out.push({l:"",t:`Vas ahorrando el ${Math.round(rate*100)}% de tus ingresos de este mes. Muy bien.`}); }
+  return out;
+}
+function addDays(d,k){ const t = new Date(Date.parse(d+"T00:00:00Z")+k*864e5); return t.toISOString().slice(0,10); }
+
+// ---------- storage ----------
+const writeChains = {};
+function queueWrite(docId, body){
+  if(mode==="local"){ saveLocal(); return; }
+  if(mode!=="db") return;
+  const prev = writeChains[docId] || Promise.resolve();
+  writeChains[docId] = prev.then(()=>col.doc(docId).set(body)).catch(e=>{ console.error(e); toast(e && e.code==="quota_exceeded" ? "No hay espacio para guardar. Exporta tus datos." : "No se pudo guardar. Revisa tu conexión."); });
+}
+function saveCfg(){ queueWrite("cfg", JSON.parse(JSON.stringify(cfg))); }
+function saveMonths(months){ for(const m of new Set(months)) queueWrite("tx-"+m, {items: txs.filter(t=>ym(t.d)===m)}); }
+function saveLocal(){ try{ localStorage.setItem("nexo-v1", JSON.stringify({cfg, txs})); }catch(e){ toast("Este navegador no permite guardar datos."); } }
+// Fill card terms the person hasn't typed yet from SETUP_ACCOUNTS (never overwrites their own values).
+function applyDefaults(){
+  if(!cfg) return false; let ch = false;
+  for(const a of cfg.accounts){
+    const d = SETUP_ACCOUNTS.find(x=>x.id===a.id); if(!d || d.type!=="tarjeta") continue;
+    for(const k of ["tea","fee","feeMonth","feeWaiver","desgRate","desgCap","desgLast","src","limit"]) if(d[k] && !a[k]){ a[k] = d[k]; ch = true; }
+    for(const k of ["closeDay","payDay"]) if(d[k] && (!a[k] || a[k]===1) && a[k]!==d[k]){ a[k] = d[k]; ch = true; }
+    if(d.name && a.name!==d.name && /millas benefit/i.test(d.name) && /interbank/i.test(a.name) && !/platinum/i.test(a.name)){ a.name = d.name; ch = true; }
+  }
+  return ch;
+}
+function fromDocs(docs){
+  let c = null; const all = [];
+  for(const d of docs){ const v = d.data(); if(!v) continue; if(d.id==="cfg") c = v; else if(d.id.startsWith("tx-")) all.push(...(v.items||[])); }
+  return {c, all};
+}
+async function boot(){
+  render();
+  let db = null, user = null;
+  try{ if(window.claude?.use){ [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]); } }catch(e){}
+  if(db && user){
+    try{
+      const id = await user.id();
+      col = db.collection("data/users/"+id);
+      mode = "db";
+      loadTimer = setTimeout(()=>{ loadNote = "No se pudo conectar todavía. Lo que ves puede no estar actualizado."; render(); }, 10000);
+      col.onSnapshot(snap=>{
+        if(!snap.metadata.fromCache){ clearTimeout(loadTimer); loadNote=""; }
+        if(mode!=="db") return;
+        const {c, all} = fromDocs(snap.docs);
+        cfg = c ? JSON.parse(JSON.stringify(c)) : null; txs = all.map(t=>({...t, fuel: t.fuel?{...t.fuel}:undefined}));
+        if(!boot._defaults && cfg && !snap.metadata.fromCache){ boot._defaults = true; if(applyDefaults()) saveCfg(); }
+        loaded = true; render(); if(!boot._locked){ boot._locked = true; showLock(); }
+      }, e=>{ clearTimeout(loadTimer); loadNote = "Se perdió la conexión con tus datos. Recarga la página."; render(); });
+      return;
+    }catch(e){ console.error(e); }
+  }
+  mode = "local";
+  try{ const s = JSON.parse(localStorage.getItem("nexo-v1")||"null"); if(s){ cfg = s.cfg; txs = s.txs||[]; } }catch(e){}
+  try{ navigator.storage?.persist?.(); }catch(e){}
+  if(applyDefaults()) saveLocal();
+  loaded = true; render(); showLock();
+}
+let loaded = false;
+
+// ---------- demo ----------
+function demoData(){
+  const A = id => id;
+  const accounts = [
+    {id:"yape",name:"Yape",type:"yape",initial:32000},
+    {id:"efe",name:"Efectivo",type:"efectivo",initial:15000},
+    {id:"bco",name:"Cuenta sueldo",type:"banco",initial:420000},
+    {id:"ibk",name:"Tarjeta Interbank",type:"tarjeta",bank:"interbank",initial:-85000,limit:800000,closeDay:20,payDay:15,tea:0,fee:0},
+    {id:"bcp",name:"Tarjeta BCP",type:"tarjeta",bank:"bcp",initial:-42000,limit:600000,closeDay:5,payDay:30,tea:0,fee:0},
+  ];
+  const t = []; const m = ym(today()), pm = addMonths(m,-1), ppm = addMonths(m,-2);
+  const add = (mon,day,tt,a,desc,cat,accId,to,fuel)=>t.push({id:uid(),t:tt,a,d:dayDate(mon,day)+"T12:00",desc,cat,acc:accId,to,fuel});
+  for(const mon of [ppm,pm,m]){
+    add(mon,1,"ingreso",450000,"Sueldo","Sueldo","bco");
+    add(mon,3,"gasto",4490,"Netflix","Suscripciones","ibk");
+    add(mon,4,"gasto",18900,"Plaza Vea","Supermercado","bcp");
+    add(mon,6,"gasto",1850,"Almuerzo","Alimentación","yape");
+    add(mon,8,"gasto",15000,"Grifo Primax","Combustible","ibk",null,{q:9.5,km:0,station:"Primax"});
+    add(mon,10,"gasto",8900,"Claro internet","Servicios","bco");
+    add(mon,12,"gasto",6500,"Cena","Restaurantes","ibk");
+    add(mon,14,"transfer",60000,"Pago tarjeta","", "bco","ibk");
+    add(mon,16,"gasto",2400,"Uber","Transporte","yape");
+  }
+  let km = 41200; t.filter(x=>x.fuel).sort((a,b)=>a.d.localeCompare(b.d)).forEach(x=>{ x.fuel.km = km; km += 360; });
+  return {cfg:{accounts, goals:[{id:"g1",name:"Fondo de emergencia",target:1200000,date:addDays(today(),300),contribs:[{d:today(),a:180000}]}], vehicle:{marca:"Toyota",modelo:"Yaris",anio:"2019",placa:"ABC-123",km:km-360,unidad:"gal"}, reminders:[{id:"r1",name:"SOAT",date:addDays(today(),24)},{id:"r2",name:"Revisión técnica",date:addDays(today(),95)}]}, txs:t.filter(x=>x.d.slice(0,10)<=today())};
+}
+let saved = null;
+function enterDemo(){ saved = {cfg, txs, mode}; const d = demoData(); cfg = d.cfg; txs = d.txs; mode = "demo"; render(); }
+function exitDemo(){ cfg = saved.cfg; txs = saved.txs; mode = saved.mode; saved = null; location.hash = "#inicio"; render(); }
+
+// ---------- charts ----------
+function barsChart(){
+  const m = ym(today()); const ms = [-5,-4,-3,-2,-1,0].map(k=>addMonths(m,k));
+  const data = ms.map(x=>({m:x, ...monthTotals(x)}));
+  const max = Math.max(1, ...data.map(d=>Math.max(d.inc,d.exp)));
+  const W=320,H=150,b=22,gw=W/6;
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Ingresos y gastos de los últimos 6 meses">`;
+  data.forEach((d,i)=>{
+    const x = i*gw + gw/2, hi = (H-b-10)*d.inc/max, he = (H-b-10)*d.exp/max;
+    s += `<rect x="${x-13}" y="${H-b-hi}" width="12" height="${Math.max(hi,0)}" rx="3" fill="var(--c1)"><title>Ingresos ${esc(monthName(d.m))}: ${money(d.inc)}</title></rect>`;
+    s += `<rect x="${x+1}" y="${H-b-he}" width="12" height="${Math.max(he,0)}" rx="3" fill="var(--c5)"><title>Gastos ${esc(monthName(d.m))}: ${money(d.exp)}</title></rect>`;
+    s += `<text x="${x}" y="${H-6}" text-anchor="middle">${MSHORT[Number(d.m.slice(5))-1]}</text>`;
+  });
+  s += `<line x1="0" x2="${W}" y1="${H-b}" y2="${H-b}" stroke="var(--line)"/></svg>`;
+  return s + `<div class="row" style="gap:16px;font-size:12.5px;color:var(--muted)"><span class="row" style="gap:6px"><i style="width:10px;height:10px;border-radius:3px;background:var(--c1)"></i>Ingresos</span><span class="row" style="gap:6px"><i style="width:10px;height:10px;border-radius:3px;background:var(--c5)"></i>Gastos</span></div>`;
+}
+function donut(byCat){
+  const entries = Object.entries(byCat).filter(e=>e[1]>0).sort((a,b)=>b[1]-a[1]);
+  const total = entries.reduce((s,e)=>s+e[1],0);
+  if(!total) return `<div class="empty">Sin gastos este mes.</div>`;
+  const top = entries.slice(0,5); const rest = entries.slice(5).reduce((s,e)=>s+e[1],0); if(rest) top.push(["Resto",rest]);
+  const R=52, C=2*Math.PI*R; let off=0, arcs="";
+  const cols = ["--c1","--c2","--c3","--c4","--c5","--c6"];
+  top.forEach(([c,v],i)=>{ const L=C*v/total; arcs += `<circle r="${R}" cx="70" cy="70" fill="none" stroke="var(${cols[i]})" stroke-width="18" stroke-dasharray="${L} ${C-L}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)"><title>${esc(c)}: ${money(v)}</title></circle>`; off+=L; });
+  const legend = top.map(([c,v],i)=>`<div class="row between" style="font-size:13.5px"><span class="row" style="gap:8px;min-width:0"><i style="width:10px;height:10px;border-radius:3px;background:var(${cols[i]});flex:none"></i><span class="ellip">${esc(c)}</span></span><span class="num">${money(v)}</span></div>`).join("");
+  return `<div class="row" style="gap:16px;align-items:center"><svg viewBox="0 0 140 140" width="120" height="120" style="flex:none" role="img" aria-label="Gastos por categoría">${arcs}</svg><div class="stack grow" style="gap:6px">${legend}</div></div>`;
+}
+
+// ---------- views ----------
+function header(title, sub){
+  return `<header class="top"><div class="brand">NE<i>X</i>O</div><button class="link" data-act="theme" aria-label="Cambiar tema">Tema</button></header>
+  ${mode==="demo"?`<div class="demo"><span>DEMO: datos de ejemplo, no se guardan</span><button data-act="exitdemo">Salir</button></div>`:""}
+  ${loadNote?`<div class="demo">${esc(loadNote)}</div>`:""}
+  ${title?`<h1>${title}</h1>${sub?`<div class="sub" style="margin-bottom:14px">${sub}</div>`:""}`:""}`;
+}
+function txRow(t){
+  const isAuto = AUTO_SET.has(t.cat);
+  let label = t.desc || TYPE_LBL[t.t], meta = "", sign = "", cls = "";
+  if(t.t==="gasto"){ sign="−"; meta = `${esc(t.cat)} · ${esc(accName(t.acc))}`; }
+  else if(t.t==="ingreso"){ sign="+"; cls="pos"; meta = `${esc(t.cat)} · ${esc(accName(t.acc))}`; }
+  else if(t.t==="devolucion"){ sign="+"; cls="pos"; meta = `Devolución · ${esc(t.cat)}`; }
+  else if(t.t==="transfer"){ meta = `${esc(accName(t.acc))} → ${esc(accName(t.to))}`; label = t.desc || (acc(t.to)?.type==="tarjeta"?"Pago de tarjeta":"Transferencia"); }
+  else if(t.t==="ajuste"){ meta = `Ajuste · ${esc(accName(t.acc))}`; sign = t.a<0?"−":"+"; }
+  const initials = (t.t==="transfer"?"⇄":(t.cat||TYPE_LBL[t.t]).slice(0,2));
+  const color = t.t==="transfer"||t.t==="ajuste" ? "var(--c6)" : catColor(t.cat||"x");
+  return `<button class="item" data-edit="${t.id}"><span class="dot" style="background:${color}">${esc(initials)}</span><span class="grow"><div class="ellip" style="font-weight:500">${esc(label)}${isAuto?' <span class="hint">· auto</span>':""}</div><div class="hint ellip">${meta}</div></span><span class="amt num ${cls}">${sign}${money(Math.abs(t.a)).replace("−","")}</span></button>`;
+}
+function vInicio(){
+  const s = summary(), m = ym(today()), cur = monthTotals(m), prev = monthTotals(addMonths(m,-1));
+  const diff = prev.exp ? Math.round((cur.exp/prev.exp-1)*100) : null;
+  const cards = cfg.accounts.filter(a=>a.type==="tarjeta");
+  const upcoming = cards.map(a=>({a, c:cardCycle(a)})).filter(x=>x.c.toPay>0).sort((x,y)=>x.c.payDate.localeCompare(y.c.payDate));
+  const recent = txs.slice().sort((a,b)=>b.d.localeCompare(a.d)).slice(0,5);
+  const tp = tips().slice(0,4);
+  return header("", "") + `
+  <div class="stack">
+    <div class="hero">
+      <div class="label">Libre para gastar</div>
+      <div class="big num">${money(s.free)}</div>
+      <div class="split num">
+        <div>En cuentas<b>${money(s.liquid)}</b></div>
+        <div>Deuda tarjetas<b>${money(s.debt)}</b></div>
+        <div>Apartado en metas<b>${money(s.saved)}</b></div>
+        <div>Pagos fijos pendientes<b>${money(s.fixedDue)}</b></div>
+      </div>
+    </div>
+    <div class="hint" style="padding:0 4px">Libre = cuentas − deuda de tarjetas − metas − pagos fijos que faltan este mes${s.minHold?` − ${money(s.minHold)} de saldo mínimo para no pagar comisión`:""}.</div>
+    <div class="grid2">
+      <div class="card"><div class="label">Ingresos del mes</div><div class="val num pos">${money(cur.inc)}</div></div>
+      <div class="card"><div class="label">Gastos del mes</div><div class="val num">${money(cur.exp)}</div><div class="hint ${diff>0?"neg":""}">${diff===null?"Sin datos del mes pasado":(diff>0?"+":"")+diff+"% vs. mes pasado"}</div></div>
+    </div>
+    ${upcoming.length||fixedPending(m).length?`<div class="card"><div class="row between"><h2>Próximos pagos</h2><a class="link" href="#mas">Pagos fijos</a></div><div class="list" style="margin-top:6px">${upcoming.map(({a,c})=>({due:c.payDate, html:`<div class="item" style="cursor:default"><span class="dot" style="background:${a.bank==="bcp"?"#1E4FA8":a.bank==="interbank"?"#0B8F5A":"var(--c6)"}">${esc(a.name.replace(/tarjeta\s*/i,"").slice(0,2))}</span><span class="grow"><div style="font-weight:500">${esc(a.name)}</div><div class="hint">${dueTxt(c.payDate)}</div></span><span class="amt num">${money(c.toPay)}</span></div>`})).concat(fixedPending(m).map(f=>({due:dayDate(m,f.day||1), html:`<div class="item" style="cursor:default"><span class="dot" style="background:${catColor(f.cat||"x")}">${esc((f.name||"").slice(0,2))}</span><span class="grow"><div style="font-weight:500" class="ellip">${esc(f.name)}</div><div class="hint">${dueTxt(dayDate(m,f.day||1))}</div></span><span class="stack" style="gap:2px;align-items:flex-end"><span class="amt num">${money(f.a)}</span><button class="link" data-fixpaid="${f.id}" style="font-size:13px">Marcar pagado</button></span></div>`}))).sort((x,y)=>x.due.localeCompare(y.due)).map(x=>x.html).join("")}</div></div>`:""}
+    ${budgetRows(m).length?`<div class="card"><div class="row between"><h2>Presupuestos</h2><button class="link" data-act="newbudget">+ Agregar</button></div><div class="stack" style="margin-top:10px">${budgetRows(m).map(b=>`<button class="stack" data-budget="${esc(b.cat)}" style="gap:6px;background:none;border:0;padding:0;text-align:left;cursor:pointer"><div class="row between" style="font-size:14px"><span>${esc(b.cat)}</span><span class="num ${b.pct>=1?"neg":b.pct>=.8?"warnc":"hint"}">${money(b.used)} de ${money(b.l)}</span></div><div class="bar"><span style="width:${Math.min(100,b.pct*100)}%;background:${b.pct>=1?"var(--bad)":b.pct>=.8?"var(--warn)":"var(--accent)"}"></span></div></button>`).join("")}</div></div>`:`<button class="card link" data-act="newbudget" style="text-align:left">+ Ponle un tope a una categoría (presupuesto)</button>`}
+    <div class="card"><h2>Asistente</h2><div style="margin-top:6px">${tp.map(x=>`<div class="tip ${x.l}"><span class="ic"></span><span>${x.t}</span></div>`).join("")}</div></div>
+    <div class="card"><h2 style="margin-bottom:10px">Flujo de efectivo</h2>${barsChart()}</div>
+    <div class="card"><h2 style="margin-bottom:12px">Gastos de ${MONTHS[Number(m.slice(5))-1]} por categoría</h2>${donut(cur.byCat)}${cur.auto?`<div class="hint" style="margin-top:10px">Incluye ${money(cur.auto)} del auto.</div>`:""}</div>
+    <div class="card"><div class="row between"><h2>Últimos movimientos</h2><a class="link" href="#movs">Ver todos</a></div><div class="list" style="margin-top:4px">${recent.length?recent.map(txRow).join(""):`<div class="empty">Todavía no hay movimientos. Toca + para registrar el primero.</div>`}</div></div>
+  </div>`;
+}
+function vMovs(){
+  movMonth ||= ym(today());
+  const q = (movFilter.q||"").trim().toLowerCase();
+  let list = q ? txs.filter(t=>[t.desc,t.cat,t.note,accName(t.acc),t.fuel?.station].join(" ").toLowerCase().includes(q)) : txs.filter(t=>ym(t.d)===movMonth);
+  if(movFilter.t!=="todos") list = list.filter(t=> movFilter.t==="auto" ? AUTO_SET.has(t.cat) : t.t===movFilter.t);
+  if(movFilter.acc) list = list.filter(t=>t.acc===movFilter.acc || t.to===movFilter.acc);
+  if(movFilter.cat) list = list.filter(t=>t.cat===movFilter.cat);
+  list.sort((a,b)=>b.d.localeCompare(a.d));
+  const tot = monthTotals(movMonth);
+  const groups = {}; list.forEach(t=>(groups[t.d.slice(0,10)] ||= []).push(t));
+  const usedCats = [...new Set(txs.map(t=>t.cat).filter(Boolean))].sort();
+  const chips = [["todos","Todos"],["gasto","Gastos"],["ingreso","Ingresos"],["transfer","Transferencias"],["auto","Auto"],["devolucion","Devoluciones"],["ajuste","Ajustes"]];
+  return header("Movimientos") + `
+  <div class="stack">
+    <input class="inp" id="mSearch" type="search" placeholder="Buscar: Tottus, Uber, Netflix…" value="${esc(movFilter.q||"")}" aria-label="Buscar movimientos" autocomplete="off">
+    ${q?`<div class="hint" style="padding:0 4px">${list.length} resultado${list.length===1?"":"s"} en todos los meses · total gastado ${money(list.filter(t=>t.t==="gasto").reduce((s,t)=>s+t.a,0))}</div>`:`
+    <div class="row between card" style="padding:10px 12px"><button class="btn" data-act="mprev" aria-label="Mes anterior">‹</button><div style="text-align:center"><div style="font-weight:600;text-transform:capitalize">${monthName(movMonth)}</div><div class="hint num">+${money(tot.inc)} · −${money(tot.exp).replace("−","")}</div></div><button class="btn" data-act="mnext" aria-label="Mes siguiente">›</button></div>
+    ${monthSummary(movMonth)}`}
+    <div class="chips">${chips.map(([k,l])=>`<button class="chip ${movFilter.t===k?"on":""}" data-ft="${k}">${l}</button>`).join("")}</div>
+    <div class="grid2">
+      <select class="inp" id="fAcc" aria-label="Filtrar por cuenta"><option value="">Todas las cuentas</option>${cfg.accounts.map(a=>`<option value="${a.id}" ${movFilter.acc===a.id?"selected":""}>${esc(a.name)}</option>`).join("")}</select>
+      <select class="inp" id="fCat" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option>${usedCats.map(c=>`<option ${movFilter.cat===c?"selected":""}>${esc(c)}</option>`).join("")}</select>
+    </div>
+    <div class="card" style="padding-top:4px">${Object.keys(groups).length? Object.entries(groups).map(([d,ts])=>`<div class="daylbl">${prettyDay(d)}</div><div class="list">${ts.map(txRow).join("")}</div>`).join("") : `<div class="empty">No hay movimientos con estos filtros.</div>`}</div>
+  </div>`;
+}
+function monthSummary(m){
+  const t = monthTotals(m), p = monthTotals(addMonths(m,-1));
+  if(!t.inc && !t.exp) return "";
+  const net = t.inc - t.exp, rate = t.inc ? Math.round(net/t.inc*100) : null;
+  const top = Object.entries(t.byCat).filter(e=>e[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const diff = p.exp ? Math.round((t.exp/p.exp-1)*100) : null;
+  return `<div class="card stack" style="gap:10px"><h2>Resumen de ${monthName(m).split(" ")[0]}</h2>
+    <div class="grid2"><div><div class="label">Ahorraste</div><div class="val num ${net<0?"neg":"pos"}">${money(net)}</div><div class="hint">${rate===null?"Sin ingresos registrados":rate+"% de tus ingresos"}</div></div>
+    <div><div class="label">Gastaste</div><div class="val num">${money(t.exp)}</div><div class="hint">${diff===null?"Sin mes anterior":(diff>0?"+":"")+diff+"% vs. mes anterior"}</div></div></div>
+    ${top.length?`<div class="hint">En qué se fue más: ${top.map(([c,v])=>`${esc(c)} ${money(v)}`).join(" · ")}${t.auto?` · Auto en total ${money(t.auto)}`:""}</div>`:""}</div>`;
+}
+function vTarjetas(){
+  const cards = cfg.accounts.filter(a=>a.type==="tarjeta"), others = cfg.accounts.filter(a=>a.type!=="tarjeta");
+  return header("Tarjetas y cuentas", "Compras con tarjeta = gasto. Pagar la tarjeta = mover dinero, no es otro gasto.") + `
+  <div class="stack">
+    ${cards.map(a=>{ const c = cardCycle(a); const used = a.limit? Math.min(100, c.debt/a.limit*100):0;
+      const mr = a.tea ? Math.pow(1+a.tea/100,1/12)-1 : null;
+      return `<div class="stack" style="gap:8px">
+      <button class="cc ${a.bank||"otro"}" data-acc="${a.id}" style="border:0;text-align:left;cursor:pointer">
+        <div class="row between"><span class="bank">${esc(a.name)}</span><span style="font-size:12px;opacity:.85">Editar</span></div>
+        <div><div style="font-size:12.5px;opacity:.85">Deuda total</div><div class="debt num">${money(c.debt)}</div></div>
+        <div class="stack" style="gap:6px">${a.limit?`<div class="bar"><span style="width:${used}%"></span></div>`:""}<div class="meta num"><span>Disponible ${a.limit?money(c.avail):"—"}</span><span>Línea ${a.limit?money(a.limit):"sin registrar"}</span></div></div>
+      </button>
+      <div class="card stack" style="gap:10px">
+        <div class="grid2">
+          <div><div class="label">Por pagar (cerró ${shortDay(c.lastClose)})</div><div class="val num ${c.toPay?"neg":""}">${money(c.toPay)}</div><div class="hint">Vence ${shortDay(c.payDate)}</div></div>
+          <div><div class="label">Va al próximo estado</div><div class="val num">${money(c.newPurch)}</div><div class="hint">Cierra ${shortDay(c.nextClose)} · paga ${shortDay(c.nextPay)}</div></div>
+        </div>
+        ${mr!==null && c.toPay?`<div class="hint">Estimado: si no pagas el total, el interés sobre ${money(c.toPay)} sería unos ${money(Math.round(c.toPay*mr))} al mes (TEA ${a.tea}% que registraste).</div>`:`<div class="hint">${a.tea?"Pagando el total a tiempo no pagas intereses.":"Agrega la TEA de tu estado de cuenta para estimar intereses."}</div>`}
+        ${(()=>{ const ch = cardCharges(a,c); return `${ch.out.map(x=>`<div class="hint">${esc(x)}</div>`).join("")}${ch.extra?`<div class="hint"><b>Próximo estado estimado: ${money(c.newPurch + ch.extra)}</b> (consumos + cargos). Es una estimación.</div>`:""}`; })()}
+        ${a.fee?`<div class="hint">Membresía: ${money(a.fee)} al año${a.feeMonth?`, se cobra en ${MONTHS[a.feeMonth-1]}`:""}${a.feeWaiver?`, ${esc(a.feeWaiver)}`:""}.</div>`:""}
+        ${a.src?`<div class="hint" style="opacity:.8">Fuente: ${esc(a.src)}</div>`:""}
+        ${c.inst.length?`<div><div class="label" style="margin-bottom:2px">Compras en cuotas</div><div class="list">${c.inst.map(x=>`<button class="item" data-edit="${x.t.id}"><span class="grow"><div class="ellip" style="font-weight:500">${esc(x.t.desc||x.t.cat)}</div><div class="hint">Próxima: cuota ${x.next} de ${x.t.cuotas} · faltan ${money(x.left)}</div></span><span class="amt num">${money(x.each)}<span class="hint">/mes</span></span></button>`).join("")}</div><div class="hint">NEXO cuenta el capital. Si tus cuotas tienen interés, el banco lo suma en tu estado de cuenta.</div></div>`:""}
+        <button class="btn pri" data-pay="${a.id}">Registrar pago de esta tarjeta</button>
+      </div></div>`; }).join("")}
+    <div class="card"><div class="row between"><h2>Cuentas</h2><button class="link" data-act="newacc">+ Agregar</button></div>
+      <div class="list" style="margin-top:4px">${others.map(a=>`<button class="item" data-acc="${a.id}"><span class="dot" style="background:${a.type==="yape"?"#6C2A8C":a.type==="efectivo"?"var(--c3)":"var(--c2)"}">${esc(a.name.slice(0,2))}</span><span class="grow"><div style="font-weight:500">${esc(a.name)}</div><div class="hint">${ACC_LBL[a.type]}</div></span><span class="amt num">${money(balance(a.id))}</span></button>`).join("")}</div>
+    </div>
+    <div class="hint" style="padding:0 4px">¿El saldo no coincide con tu banco? Toca la cuenta y usa "Ajustar saldo".</div>
+  </div>`;
+}
+function vMas(){
+  const fs = fuelStats(), v = cfg.vehicle||{}, u = v.unidad==="L"?"litro":"galón", uS = v.unidad==="L"?"L":"gal";
+  const m = ym(today()), fuelMonth = txs.filter(t=>t.fuel && ym(t.d)===m).reduce((s,t)=>s+t.a,0);
+  const yr = today().slice(0,4), fuelYear = txs.filter(t=>t.fuel && t.d.startsWith(yr)).reduce((s,t)=>s+t.a,0);
+  const autoMonth = monthTotals(m).auto;
+  const rem = (cfg.reminders||[]).slice().sort((a,b)=>(a.date||"9").localeCompare(b.date||"9"));
+  return header("Metas y auto") + `
+  <div class="stack">
+    <div class="row between"><h2>Metas de ahorro</h2><button class="link" data-act="newgoal">+ Nueva meta</button></div>
+    ${cfg.goals.length? cfg.goals.map(g=>{ const p = goalPlan(g), pct = g.target? Math.min(100, p.saved/g.target*100):0;
+      return `<div class="card stack" style="gap:10px"><div class="row between"><div style="font-weight:600">${esc(g.name)}</div><button class="link" data-goal="${g.id}">Editar</button></div>
+      <div class="row between num"><span class="val">${money(p.saved)}</span><span class="hint">de ${money(g.target)}</span></div>
+      <div class="bar"><span style="width:${pct}%"></span></div>
+      <div class="hint">${Math.round(pct)}% · ${p.left? (p.perMonth? `Aparta ${money(p.perMonth)} al mes o ${money(p.perWeek)} a la semana hasta el ${shortDay(g.date)} ${g.date.slice(0,4)}.` : p.late? "La fecha ya pasó.":"Ponle una fecha para calcular cuánto apartar.") : "¡Meta cumplida!"}</div>
+      <button class="btn" data-contrib="${g.id}">Agregar aporte</button></div>`; }).join("") : `<div class="card empty">Crea tu primera meta: fondo de emergencia, viaje, departamento…</div>`}
+    <div class="hint" style="padding:0 4px">Los aportes apartan dinero dentro de tus cuentas: bajan el monto "Libre para gastar".</div>
+
+    <div class="row between" style="margin-top:10px"><h2>Mi auto</h2><button class="link" data-act="vehicle">Editar datos</button></div>
+    <div class="card"><div style="font-weight:600">${v.marca?esc(`${v.marca} ${v.modelo||""} ${v.anio||""}`):"Sin datos del auto"}</div><div class="hint">${v.placa?esc(v.placa)+" · ":""}${v.km?Number(v.km).toLocaleString("en-US")+" km":""}</div></div>
+    <div class="grid2">
+      <div class="card"><div class="label">Combustible este mes</div><div class="val num">${money(fuelMonth)}</div></div>
+      <div class="card"><div class="label">Combustible ${yr}</div><div class="val num">${money(fuelYear)}</div></div>
+      <div class="card"><div class="label">Rendimiento promedio</div><div class="val num">${fs.avgEff?fs.avgEff.toFixed(1)+" km/"+uS:"—"}</div></div>
+      <div class="card"><div class="label">Costo por km</div><div class="val num">${fs.costKm?money(Math.round(fs.costKm)):"—"}</div></div>
+      <div class="card"><div class="label">Precio promedio por ${u}</div><div class="val num">${fs.avgPpu?money(Math.round(fs.avgPpu)):"—"}</div></div>
+      <div class="card"><div class="label">Todo el auto este mes</div><div class="val num">${money(autoMonth)}</div></div>
+    </div>
+    ${!fs.avgEff?`<div class="hint" style="padding:0 4px">El rendimiento aparece desde tu segunda carga con kilometraje.</div>`:""}
+    ${fs.warn.map(w=>`<div class="card tip w"><span class="ic"></span><span>${esc(w)}</span></div>`).join("")}
+    <button class="btn pri block" data-act="fuel">Registrar carga de combustible</button>
+    <div class="card"><h2>Historial de combustible</h2><div class="list" style="margin-top:4px">${fs.rows.length? fs.rows.slice(0,12).map(r=>`<button class="item" data-edit="${r.t.id}"><span class="dot" style="background:var(--c3)">${esc(shortDay(r.t.d.slice(0,10)).split(" ")[0])}</span><span class="grow"><div style="font-weight:500">${esc(r.t.fuel.station||r.t.desc||"Combustible")}</div><div class="hint num">${r.t.fuel.q?r.t.fuel.q+" "+uS:""}${r.ppu?" · "+money(Math.round(r.ppu))+"/"+uS:""}${r.t.fuel.km?" · "+r.t.fuel.km.toLocaleString("en-US")+" km":""}${r.eff?" · "+r.eff.toFixed(1)+" km/"+uS:""}</div></span><span class="amt num">${money(r.t.a)}</span></button>`).join(""):`<div class="empty">Aún no registras cargas.</div>`}</div></div>
+    <div class="card"><div class="row between"><h2>Recordatorios</h2><button class="link" data-act="newrem">+ Agregar</button></div><div class="list" style="margin-top:4px">${rem.length? rem.map(r=>{ const d = r.date? daysBetween(today(), r.date):null; return `<button class="item" data-rem="${r.id}"><span class="grow"><div style="font-weight:500">${esc(r.name)}</div><div class="hint">${r.date?shortDay(r.date)+" "+r.date.slice(0,4):""}${r.km?" · a los "+Number(r.km).toLocaleString("en-US")+" km":""}</div></span><span class="${d!==null&&d<0?"neg":d!==null&&d<=30?"warnc":"hint"}" style="font-weight:600;font-size:13px">${d===null?"":d<0?"Vencido":d===0?"Hoy":d+" días"}</span></button>`; }).join(""):`<div class="empty">SOAT, revisión técnica, cambio de aceite…</div>`}</div></div>
+
+    <div class="card" style="margin-top:10px"><div class="row between"><h2>Pagos fijos del mes</h2><button class="link" data-act="newfixed">+ Agregar</button></div>
+      <div class="list" style="margin-top:4px">${(cfg.fixed||[]).length? cfg.fixed.slice().sort((a,b)=>(a.day||1)-(b.day||1)).map(f=>{ const paid = (f.paid||[]).includes(m); return `<button class="item" data-fixed="${f.id}"><span class="dot" style="background:${catColor(f.cat||"x")}">${esc(String(f.day||1))}</span><span class="grow"><div class="ellip" style="font-weight:500">${esc(f.name)}</div><div class="hint">Día ${f.day||1} · ${esc(f.cat||"")} · ${esc(accName(f.acc))}</div></span><span class="stack" style="gap:2px;align-items:flex-end"><span class="amt num">${money(f.a)}</span><span class="hint ${paid?"pos":""}">${paid?"Pagado":"Pendiente"}</span></span></button>`; }).join("") : `<div class="empty">Alquiler, internet, Netflix, cuota del carro…</div>`}</div>
+      <div class="hint">Toca "Marcar pagado" en Inicio cuando lo pagues: se registra como gasto.</div></div>
+
+    <h2 style="margin-top:10px">Ajustes</h2>
+    <div class="card stack">
+      <button class="btn block" data-act="pin">${hasPin()?"Cambiar o quitar PIN":"Poner PIN de bloqueo"}</button>
+      ${canDownload()?`<button class="btn block" data-act="download">Descargar copia de seguridad</button>`:""}
+      <button class="btn block" data-act="export">Copiar copia de seguridad</button>
+      <button class="btn block" data-act="import">Restaurar copia de seguridad</button>
+      ${mode!=="demo"?`<button class="btn block" data-act="demo">Ver con datos de ejemplo</button>`:""}
+      <button class="btn danger block" data-act="wipe">Borrar todos mis datos</button>
+      <div class="hint">${mode==="db"?"Tus datos se guardan en tu cuenta de Claude, solo tú puedes verlos.":"Tus datos se guardan solo en este iPhone. Saca una copia de seguridad cada cierto tiempo y guárdala en Notas, Archivos o tu correo."}</div>
+    </div>
+  </div>`;
+}
+function vSetup(){
+  const def = SETUP_ACCOUNTS;
+  return header("Bienvenido a NEXO", "Anota cuánto tienes hoy en cada lugar. Puedes cambiarlo después.") + `
+  <form id="setup" class="stack">
+    ${def.map(a=>`<div class="card stack" style="gap:10px" data-sa="${a.id}" data-type="${a.type}" data-bank="${a.bank||""}">
+      <input class="inp" name="name" value="${a.name}" aria-label="Nombre de la cuenta" style="font-weight:600">
+      ${a.hint?`<div class="hint">${esc(a.hint)}</div>`:""}
+      ${a.type==="tarjeta"?`
+        <div class="grid2"><div class="field"><label>Deuda actual (S/)</label><input class="inp" name="bal" inputmode="decimal" placeholder="0.00"></div><div class="field"><label>Línea de crédito (S/)</label><input class="inp" name="limit" inputmode="decimal" placeholder="0.00" value="${a.limit?(a.limit/100).toFixed(2):""}"></div></div>
+        <div class="grid2"><div class="field"><label>Día de cierre</label><input class="inp" name="close" inputmode="numeric" placeholder="ej. 20" value="${a.closeDay||""}"></div><div class="field"><label>Día de pago</label><input class="inp" name="pay" inputmode="numeric" placeholder="ej. 15" value="${a.payDay||""}"></div></div>
+        <div class="hint">Los días están en tu estado de cuenta ("fecha de cierre" y "último día de pago").</div>`
+      :`<div class="field"><label>Saldo actual (S/)</label><input class="inp" name="bal" inputmode="decimal" placeholder="0.00"></div>`}
+    </div>`).join("")}
+    <button class="btn pri block" type="submit">Guardar y empezar</button>
+    <button class="btn block" type="button" data-act="demo">Primero quiero ver un ejemplo</button>
+  </form>`;
+}
+function render(){
+  const app = $("#app");
+  if(!loaded){ app.innerHTML = `<div class="empty" style="padding-top:40vh">Cargando NEXO…</div>`; return; }
+  if(!cfg){ $("#nav").hidden = true; app.innerHTML = vSetup(); return; }
+  $("#nav").hidden = false;
+  view = (location.hash||"#inicio").slice(1);
+  if(!["inicio","movs","tarjetas","mas"].includes(view)) view = "inicio";
+  document.querySelectorAll("nav.tabs a").forEach(a=>a.classList.toggle("on", a.dataset.v===view));
+  const focusId = document.activeElement?.id;
+  app.innerHTML = view==="movs"?vMovs(): view==="tarjetas"?vTarjetas(): view==="mas"?vMas(): vInicio();
+  if(focusId==="mSearch"){ const i = $("#mSearch"); if(i){ i.focus(); const n = i.value.length; try{ i.setSelectionRange(n,n); }catch(e){} } }
+}
+
+// ---------- sheets ----------
+function openSheet(html, after){
+  const sh = $("#sheet"), sc = $("#scrim");
+  $("#sheetIn").innerHTML = `<div class="grab"></div>` + html;
+  sh.hidden = false; sc.hidden = false;
+  requestAnimationFrame(()=>{ sh.classList.add("show"); sc.classList.add("show"); });
+  after && after();
+}
+function closeSheet(){
+  const sh = $("#sheet"), sc = $("#scrim");
+  sh.classList.remove("show"); sc.classList.remove("show");
+  setTimeout(()=>{ sh.hidden = true; sc.hidden = true; $("#sheetIn").innerHTML=""; }, 230);
+}
+const accOpts = (sel, filter) => cfg.accounts.filter(filter||(()=>true)).map(a=>`<option value="${a.id}" ${a.id===sel?"selected":""}>${esc(a.name)}</option>`).join("");
+const catOpts = (kind, sel) => kind==="ingreso"
+  ? CATS.ingreso.map(c=>`<option ${c===sel?"selected":""}>${c}</option>`).join("")
+  : `<optgroup label="Personales">${CATS.gasto.map(c=>`<option ${c===sel?"selected":""}>${c}</option>`).join("")}</optgroup><optgroup label="Auto">${CATS.auto.map(c=>`<option ${c===sel?"selected":""}>${c}</option>`).join("")}</optgroup>`;
+
+function txSheet(existing, preset){
+  const t = existing ? JSON.parse(JSON.stringify(existing)) : {t: preset?.t||"gasto", a:0, d: limaNow(), desc:"", cat:"", acc: preset?.acc || (cfg.accounts.find(a=>a.type==="yape")||cfg.accounts[0])?.id, to: preset?.to||""};
+  let kind = t.fuel ? "fuel" : t.t;
+  let catTouched = !!existing;
+  const v = cfg.vehicle||{}, uS = v.unidad==="L"?"L":"gal";
+  const draw = () => {
+    const isT = kind==="transfer", isF = kind==="fuel", isAdj = kind==="ajuste";
+    const firstCard = cfg.accounts.find(a=>a.type==="tarjeta")?.id;
+    openSheet(`
+      <div class="stack">
+        <div class="seg" role="tablist">${[["gasto","Gasto"],["ingreso","Ingreso"],["transfer","Transferir / pagar"],["fuel","Combustible"]].map(([k,l])=>`<button type="button" class="${kind===k?"on":""}" data-kind="${k}">${l}</button>`).join("")}</div>
+        <div class="row" style="justify-content:center;gap:10px">${!existing&&kind!=="fuel"?"":""}</div>
+        <input class="inp amount-inp num" id="tAmt" inputmode="decimal" placeholder="S/ 0.00" value="${t.a?((kind==="ajuste"?t.a:Math.abs(t.a))/100).toFixed(2):""}" aria-label="Importe">
+        ${isAdj?`<div class="hint" style="text-align:center">Usa un número negativo para bajar el saldo.</div>`:""}
+        ${isF?`<div class="grid2"><div class="field"><label>Cantidad (${uS})</label><input class="inp" id="fQ" inputmode="decimal" value="${t.fuel?.q??""}"></div><div class="field"><label>Kilometraje actual</label><input class="inp" id="fKm" inputmode="numeric" value="${t.fuel?.km||""}" placeholder="${v.km?Number(v.km).toLocaleString("en-US"):""}"></div></div>
+          <div class="field"><label>Grifo</label><input class="inp" id="fSt" value="${esc(t.fuel?.station||"")}" placeholder="Primax, Repsol…"></div><div class="hint" id="fPpu"></div>`
+        :`<div class="field"><label>Descripción</label><input class="inp" id="tDesc" value="${esc(t.desc)}" placeholder="${isT?"Pago tarjeta, ahorro…":"Almuerzo, Uber, Tottus…"}" autocomplete="off"></div>`}
+        ${!isT&&!isF&&!isAdj?`<div class="field"><label>Categoría <span id="catHint" class="hint"></span></label><select class="inp" id="tCat">${catOpts(kind==="ingreso"?"ingreso":"gasto", t.cat)}</select></div>`:""}
+        ${isT?`<div class="grid2"><div class="field"><label>Desde</label><select class="inp" id="tAcc">${accOpts(t.acc, a=>a.type!=="tarjeta")}</select></div><div class="field"><label>Hacia</label><select class="inp" id="tTo">${accOpts(t.to||firstCard, a=>true)}</select></div></div><div class="hint">Elige una tarjeta en "Hacia" para registrar su pago. No cuenta como gasto.</div>`
+        :`<div class="field"><label>${kind==="ingreso"?"Entra a":"Pagado con"}</label><select class="inp" id="tAcc">${accOpts(t.acc, kind==="ingreso"? a=>a.type!=="tarjeta" : null)}</select></div>`}
+        ${kind==="gasto"?`<div class="field" id="cuoF" ${acc(t.acc)?.type==="tarjeta"?"":"hidden"}><label>Cuotas</label><select class="inp" id="tCuo">${[1,2,3,4,5,6,8,10,12,18,24,36].map(n=>`<option value="${n}" ${(t.cuotas||1)===n?"selected":""}>${n===1?"Sin cuotas (1 pago)":n+" cuotas"}</option>`).join("")}</select></div>`:""}
+        <div class="field"><label>Fecha y hora</label><input class="inp" id="tDate" type="datetime-local" value="${t.d}"></div>
+        <div class="field"><label>Notas (opcional)</label><input class="inp" id="tNote" value="${esc(t.note||"")}"></div>
+        <button class="btn pri block" id="tSave">${existing?"Guardar cambios":"Registrar"}</button>
+        ${existing?`<div class="row" style="justify-content:center;gap:8px"><button class="btn" id="tRefund" ${existing.t!=="gasto"?"hidden":""}>Registrar devolución</button><button class="btn danger" id="tDel">Eliminar</button></div><div id="delConfirm" hidden class="card row between"><span>¿Eliminar este movimiento?</span><button class="btn danger" id="tDelYes">Sí, eliminar</button></div>`:""}
+      </div>`, () => {
+        const sh = $("#sheetIn");
+        sh.querySelectorAll("[data-kind]").forEach(b=>b.onclick=()=>{ collect(); kind=b.dataset.kind; if(!catTouched) t.cat=""; draw(); });
+        const desc = $("#tDesc"), cat = $("#tCat");
+        if(cat){ cat.onchange = ()=>{ catTouched = true; $("#catHint").textContent=""; }; }
+        if(desc && cat){
+          const sugg = ()=>{ if(catTouched) return; const g = guessCat(desc.value, kind); if(g && [...cat.options].some(o=>o.value===g)){ cat.value = g; $("#catHint").textContent = "· sugerida"; } };
+          desc.oninput = sugg; if(!existing) sugg();
+        }
+        if(kind==="fuel"){ const upd=()=>{ const a=toCents($("#tAmt").value), q=parseFloat($("#fQ").value); $("#fPpu").textContent = a>0&&q>0? `Precio: ${money(Math.round(a/q))} por ${uS==="L"?"litro":"galón"}`:""; }; $("#tAmt").oninput=upd; $("#fQ").oninput=upd; upd(); }
+        if($("#cuoF")) $("#tAcc").addEventListener("change", ()=>{ $("#cuoF").hidden = acc($("#tAcc").value)?.type!=="tarjeta"; });
+        if(!existing) setTimeout(()=>$("#tAmt").focus(), 260);
+        $("#tSave").onclick = save;
+        if(existing){
+          $("#tDel").onclick = ()=>{ $("#delConfirm").hidden = false; };
+          $("#tDelYes").onclick = ()=>{ const m = ym(existing.d); txs = txs.filter(x=>x.id!==existing.id); saveMonths([m]); closeSheet(); render(); toast("Movimiento eliminado"); };
+          $("#tRefund").onclick = ()=>{ closeSheet(); setTimeout(()=>txSheet(null,{t:"devolucion"}) || null, 250); refundOf = existing; };
+        }
+      });
+  };
+  const collect = () => {
+    const a = toCents($("#tAmt")?.value); if(isFinite(a)) t.a = a;
+    if($("#tDesc")) t.desc = $("#tDesc").value.trim();
+    if($("#tCat")) t.cat = $("#tCat").value;
+    if($("#tAcc")) t.acc = $("#tAcc").value;
+    if($("#tTo")) t.to = $("#tTo").value;
+    if($("#tDate")) t.d = $("#tDate").value || limaNow();
+    if($("#tNote")) t.note = $("#tNote").value.trim();
+    if($("#tCuo")){ const n = parseInt($("#tCuo").value)||1; if(n>1 && acc(t.acc)?.type==="tarjeta") t.cuotas = n; else delete t.cuotas; } else delete t.cuotas;
+    if(kind==="fuel"){ t.fuel = {q: parseFloat($("#fQ").value)||0, km: parseInt(String($("#fKm").value).replace(/\D/g,""))||0, station: $("#fSt").value.trim()}; }
+  };
+  const save = () => {
+    collect();
+    if(!isFinite(t.a) || t.a===0){ toast("Escribe el importe"); return; }
+    if(kind!=="ajuste" && t.a<0) t.a = -t.a;
+    if(kind==="transfer"){ if(!t.to || t.to===t.acc){ toast("Elige dos cuentas distintas"); return; } t.t="transfer"; t.cat=""; delete t.fuel; }
+    else if(kind==="fuel"){ t.t="gasto"; t.cat="Combustible"; t.desc = t.desc || ("Combustible" + (t.fuel.station?" "+t.fuel.station:"")); delete t.to;
+      if(t.fuel.km && (!cfg.vehicle?.km || t.fuel.km > cfg.vehicle.km)){ cfg.vehicle = {...(cfg.vehicle||{}), km:t.fuel.km}; saveCfg(); } }
+    else { t.t = kind; delete t.to; delete t.fuel; if(!t.cat && kind!=="ajuste") t.cat = kind==="ingreso"?"Otros ingresos":"Otros"; }
+    if(kind==="devolucion" && refundOf){ t.cat = refundOf.cat; t.acc = t.acc || refundOf.acc; }
+    if(kind==="ajuste") t.cat = "";
+    const months = [ym(t.d)];
+    if(existing){ months.push(ym(existing.d)); txs = txs.map(x=>x.id===existing.id? t : x); }
+    else { t.id = uid(); t.src = "manual"; txs.push(t); }
+    saveMonths(months); closeSheet(); render();
+    toast(existing?"Cambios guardados": `${TYPE_LBL[t.t]} registrado: ${money(t.a)}`);
+    refundOf = null;
+  };
+  // devolución and ajuste are reached from other buttons; show them as their own kind
+  draw();
+  if(kind==="devolucion" || kind==="ajuste"){
+    const seg = $("#sheetIn .seg"); if(seg) seg.outerHTML = `<div style="text-align:center;font-weight:600">${TYPE_LBL[kind]}</div>`;
+    if(kind==="devolucion" && $("#tCat") && refundOf){ $("#tCat").value = refundOf.cat; if($("#tDesc") && !$("#tDesc").value) $("#tDesc").value = "Devolución " + (refundOf.desc||""); if($("#tAcc")) $("#tAcc").value = refundOf.acc; }
+  }
+}
+let refundOf = null;
+
+function accSheet(a){
+  const isNew = !a; a = a ? {...a} : {id:uid(), name:"", type:"banco", initial:0};
+  const isCard = a.type==="tarjeta";
+  const curBal = isNew?0:balance(a.id);
+  openSheet(`<div class="stack">
+    <h2>${isNew?"Nueva cuenta":esc(a.name)}</h2>
+    <div class="field"><label>Nombre</label><input class="inp" id="aName" value="${esc(a.name)}"></div>
+    ${isNew?`<div class="field"><label>Tipo</label><select class="inp" id="aType">${Object.entries(ACC_LBL).map(([k,l])=>`<option value="${k}">${l}</option>`).join("")}</select></div>
+      <div class="field"><label id="aBalL">Saldo actual (S/)</label><input class="inp" id="aBal" inputmode="decimal" placeholder="0.00"></div>
+      <div class="field" id="aBankF" hidden><label>Banco</label><select class="inp" id="aBank"><option value="interbank">Interbank</option><option value="bcp">BCP</option><option value="otro">Otro</option></select></div>`
+    :`<div class="card"><div class="label">${isCard?"Deuda actual":"Saldo actual"}</div><div class="val num">${money(isCard?Math.max(0,-curBal):curBal)}</div></div>`}
+    <div id="aCardF" class="stack" ${isCard||isNew?"":"hidden"} ${isNew?"hidden":""}>
+      <div class="grid2"><div class="field"><label>Línea de crédito (S/)</label><input class="inp" id="aLim" inputmode="decimal" value="${a.limit?(a.limit/100).toFixed(2):""}"></div><div class="field"><label>TEA (%)</label><input class="inp" id="aTea" inputmode="decimal" value="${a.tea||""}" placeholder="De tu estado de cuenta"></div></div>
+      <div class="grid2"><div class="field"><label>Día de cierre</label><input class="inp" id="aClose" inputmode="numeric" value="${a.closeDay||""}"></div><div class="field"><label>Día de pago</label><input class="inp" id="aPay" inputmode="numeric" value="${a.payDay||""}"></div></div>
+      <div class="grid2"><div class="field"><label>Membresía anual (S/)</label><input class="inp" id="aFee" inputmode="decimal" value="${a.fee?(a.fee/100).toFixed(2):""}" placeholder="0.00"></div><div class="field"><label>Mes de cobro</label><select class="inp" id="aFeeM"><option value="">—</option>${MONTHS.map((n,i)=>`<option value="${i+1}" ${a.feeMonth===i+1?"selected":""}>${n}</option>`).join("")}</select></div></div>
+      <div class="grid2"><div class="field"><label>Desgravamen (% mensual)</label><input class="inp" id="aDg" inputmode="decimal" value="${a.desgRate||""}"></div><div class="field"><label>Tope desgravamen (S/)</label><input class="inp" id="aDgC" inputmode="decimal" value="${a.desgCap?(a.desgCap/100).toFixed(2):""}"></div></div>
+      <div class="hint">Copia estos datos de tu estado de cuenta o de la hoja resumen de tu tarjeta. NEXO no inventa tasas.</div>
+    </div>
+    ${!isCard?`<div class="field"><label>Saldo mínimo para no pagar comisión (S/)</label><input class="inp" id="aMin" inputmode="decimal" value="${a.minBal?(a.minBal/100).toFixed(2):""}" placeholder="Opcional"></div>`:""}
+    ${!isNew?`<div class="field"><label>Ajustar ${isCard?"deuda":"saldo"} a (S/)</label><input class="inp" id="aAdj" inputmode="decimal" placeholder="Lo que dice tu banco hoy"></div><div class="hint">Crea un "ajuste de saldo" que no cuenta como gasto ni ingreso.</div>`:""}
+    <button class="btn pri block" id="aSave">Guardar</button>
+    ${!isNew?`<button class="btn danger" id="aDel">Eliminar cuenta</button><div id="aDelC" class="card row between" hidden><span class="hint">Sus movimientos quedan en el historial.</span><button class="btn danger" id="aDelY">Eliminar</button></div>`:""}
+  </div>`, ()=>{
+    if(isNew){ const ty = $("#aType"); ty.onchange = ()=>{ const c = ty.value==="tarjeta"; $("#aCardF").hidden = !c; $("#aBankF").hidden = !c; $("#aBalL").textContent = c?"Deuda actual (S/)":"Saldo actual (S/)"; }; }
+    $("#aSave").onclick = ()=>{
+      a.name = $("#aName").value.trim() || "Cuenta";
+      if(isNew){ a.type = $("#aType").value; const b = toCents($("#aBal").value)||0; a.initial = a.type==="tarjeta"? -Math.abs(b) : b; if(a.type==="tarjeta") a.bank = $("#aBank").value; }
+      if(a.type==="tarjeta"){ a.limit = toCents($("#aLim").value)||0; a.tea = parseFloat($("#aTea").value)||0; a.closeDay = Math.min(31,Math.max(1,parseInt($("#aClose").value)||1)); a.payDay = Math.min(31,Math.max(1,parseInt($("#aPay").value)||1)); a.fee = toCents($("#aFee").value)||0; a.feeMonth = parseInt($("#aFeeM").value)||0; a.desgRate = parseFloat($("#aDg").value)||0; a.desgCap = toCents($("#aDgC").value)||0; }
+      if($("#aMin")) a.minBal = toCents($("#aMin").value)||0;
+      if(isNew) cfg.accounts.push(a); else cfg.accounts = cfg.accounts.map(x=>x.id===a.id?a:x);
+      saveCfg();
+      const adjEl = $("#aAdj");
+      if(adjEl && adjEl.value.trim()){
+        const target = toCents(adjEl.value); if(isFinite(target)){ const want = a.type==="tarjeta"? -Math.abs(target) : target; const diff = want - balance(a.id);
+          if(diff){ const t = {id:uid(), t:"ajuste", a:diff, d:limaNow(), desc:"Ajuste de saldo", cat:"", acc:a.id, src:"manual"}; txs.push(t); saveMonths([ym(t.d)]); } }
+      }
+      closeSheet(); render(); toast("Cuenta guardada");
+    };
+    if(!isNew){ $("#aDel").onclick = ()=>{$("#aDelC").hidden=false;}; $("#aDelY").onclick = ()=>{ cfg.accounts = cfg.accounts.filter(x=>x.id!==a.id); saveCfg(); closeSheet(); render(); }; }
+  });
+}
+function goalSheet(g){
+  const isNew = !g; g = g? JSON.parse(JSON.stringify(g)) : {id:uid(), name:"", target:0, date:"", contribs:[]};
+  openSheet(`<div class="stack"><h2>${isNew?"Nueva meta":"Editar meta"}</h2>
+    <div class="field"><label>Nombre</label><input class="inp" id="gName" value="${esc(g.name)}" placeholder="Fondo de emergencia"></div>
+    <div class="grid2"><div class="field"><label>Objetivo (S/)</label><input class="inp" id="gT" inputmode="decimal" value="${g.target?(g.target/100).toFixed(2):""}"></div><div class="field"><label>Fecha objetivo</label><input class="inp" id="gD" type="date" value="${g.date||""}"></div></div>
+    ${!isNew && g.contribs.length?`<div class="card"><div class="label">Aportes</div><div class="list">${g.contribs.slice().reverse().map(c=>`<div class="item" style="cursor:default"><span class="grow hint">${shortDay(c.d)} ${c.d.slice(0,4)}</span><span class="amt num ${c.a<0?"neg":""}">${money(c.a)}</span></div>`).join("")}</div></div>`:""}
+    <button class="btn pri block" id="gSave">Guardar</button>
+    ${!isNew?`<button class="btn danger" id="gDel">Eliminar meta</button><div id="gDelC" class="card row between" hidden><span class="hint">El dinero apartado vuelve a "libre".</span><button class="btn danger" id="gDelY">Eliminar</button></div>`:""}
+  </div>`, ()=>{
+    $("#gSave").onclick = ()=>{ g.name = $("#gName").value.trim()||"Meta"; g.target = toCents($("#gT").value)||0; g.date = $("#gD").value;
+      if(isNew) cfg.goals.push(g); else cfg.goals = cfg.goals.map(x=>x.id===g.id?g:x); saveCfg(); closeSheet(); render(); toast("Meta guardada"); };
+    if(!isNew){ $("#gDel").onclick=()=>{$("#gDelC").hidden=false;}; $("#gDelY").onclick=()=>{ cfg.goals = cfg.goals.filter(x=>x.id!==g.id); saveCfg(); closeSheet(); render(); }; }
+  });
+}
+function contribSheet(g){
+  openSheet(`<div class="stack"><h2>Aporte a ${esc(g.name)}</h2>
+    <input class="inp amount-inp num" id="cA" inputmode="decimal" placeholder="S/ 0.00" aria-label="Importe del aporte">
+    <div class="seg"><button class="on" data-s="1">Aportar</button><button data-s="-1">Retirar</button></div>
+    <button class="btn pri block" id="cSave">Guardar</button></div>`, ()=>{
+    let sign = 1; document.querySelectorAll("#sheetIn [data-s]").forEach(b=>b.onclick=()=>{ sign=Number(b.dataset.s); document.querySelectorAll("#sheetIn [data-s]").forEach(x=>x.classList.toggle("on",x===b)); });
+    setTimeout(()=>$("#cA").focus(),260);
+    $("#cSave").onclick = ()=>{ const a = toCents($("#cA").value); if(!(a>0)){ toast("Escribe el importe"); return; }
+      const gg = cfg.goals.find(x=>x.id===g.id); (gg.contribs ||= []).push({d:today(), a: sign*a}); saveCfg(); closeSheet(); render(); toast(sign>0?"Aporte guardado":"Retiro guardado"); };
+  });
+}
+function vehicleSheet(){
+  const v = {...(cfg.vehicle||{})};
+  openSheet(`<div class="stack"><h2>Datos del auto</h2>
+    <div class="grid2"><div class="field"><label>Marca</label><input class="inp" id="vMa" value="${esc(v.marca||"")}"></div><div class="field"><label>Modelo</label><input class="inp" id="vMo" value="${esc(v.modelo||"")}"></div></div>
+    <div class="grid2"><div class="field"><label>Año</label><input class="inp" id="vY" inputmode="numeric" value="${esc(v.anio||"")}"></div><div class="field"><label>Placa</label><input class="inp" id="vP" value="${esc(v.placa||"")}"></div></div>
+    <div class="grid2"><div class="field"><label>Kilometraje</label><input class="inp" id="vK" inputmode="numeric" value="${v.km||""}"></div><div class="field"><label>Unidad</label><select class="inp" id="vU"><option value="gal" ${v.unidad!=="L"?"selected":""}>Galones</option><option value="L" ${v.unidad==="L"?"selected":""}>Litros</option></select></div></div>
+    <div class="grid2"><div class="field"><label>Combustible</label><input class="inp" id="vF" value="${esc(v.combustible||"")}" placeholder="Gasohol 90, GLP…"></div><div class="field"><label>Tanque</label><input class="inp" id="vT" inputmode="decimal" value="${esc(v.tanque||"")}"></div></div>
+    <button class="btn pri block" id="vSave">Guardar</button></div>`, ()=>{
+    $("#vSave").onclick = ()=>{ cfg.vehicle = {marca:$("#vMa").value.trim(), modelo:$("#vMo").value.trim(), anio:$("#vY").value.trim(), placa:$("#vP").value.trim().toUpperCase(), km: parseInt(String($("#vK").value).replace(/\D/g,""))||0, unidad:$("#vU").value, combustible:$("#vF").value.trim(), tanque:$("#vT").value.trim()}; saveCfg(); closeSheet(); render(); toast("Datos del auto guardados"); };
+  });
+}
+function remSheet(r){
+  const isNew = !r; r = r? {...r} : {id:uid(), name:"", date:"", km:""};
+  openSheet(`<div class="stack"><h2>${isNew?"Nuevo recordatorio":"Recordatorio"}</h2>
+    <div class="chips">${["SOAT","Revisión técnica","Seguro vehicular","Cambio de aceite","Mantenimiento"].map(n=>`<button class="chip" data-n="${n}">${n}</button>`).join("")}</div>
+    <div class="field"><label>Qué</label><input class="inp" id="rN" value="${esc(r.name)}"></div>
+    <div class="grid2"><div class="field"><label>Fecha</label><input class="inp" id="rD" type="date" value="${r.date||""}"></div><div class="field"><label>O a los km</label><input class="inp" id="rK" inputmode="numeric" value="${r.km||""}"></div></div>
+    <button class="btn pri block" id="rSave">Guardar</button>${!isNew?`<button class="btn danger" id="rDel">Eliminar</button>`:""}</div>`, ()=>{
+    document.querySelectorAll("#sheetIn [data-n]").forEach(b=>b.onclick=()=>{ $("#rN").value=b.dataset.n; });
+    $("#rSave").onclick = ()=>{ r.name=$("#rN").value.trim()||"Recordatorio"; r.date=$("#rD").value; r.km=parseInt(String($("#rK").value).replace(/\D/g,""))||""; cfg.reminders ||= [];
+      if(isNew) cfg.reminders.push(r); else cfg.reminders = cfg.reminders.map(x=>x.id===r.id?r:x); saveCfg(); closeSheet(); render(); };
+    if(!isNew) $("#rDel").onclick = ()=>{ cfg.reminders = cfg.reminders.filter(x=>x.id!==r.id); saveCfg(); closeSheet(); render(); };
+  });
+}
+function exportSheet(){
+  const data = JSON.stringify({app:"NEXO", v:1, exported:limaNow(), cfg, txs});
+  openSheet(`<div class="stack"><h2>Copia de seguridad</h2><div class="hint">Guárdala en Notas o envíatela por correo. ${txs.length} movimientos.</div>
+    <textarea class="inp" id="expT" rows="6" readonly style="font-size:12px">${esc(data)}</textarea><button class="btn pri block" id="expC">Copiar</button></div>`, ()=>{
+    $("#expC").onclick = ()=>{ try{ localStorage.setItem("nexo-lastbackup", today()); }catch(e){} navigator.clipboard.writeText(data).then(()=>toast("Copiado"), ()=>{ $("#expT").select(); toast("Selecciona y copia el texto"); }); };
+  });
+}
+function importSheet(){
+  openSheet(`<div class="stack"><h2>Restaurar copia</h2><div class="hint">Pega aquí una copia de NEXO. Reemplaza todos tus datos actuales.</div>
+    <label class="btn block" style="text-align:center">Elegir archivo de copia<input type="file" id="impF" accept=".json,application/json,text/plain" hidden></label><div class="hint">O pega el texto de la copia:</div><textarea class="inp" id="impT" rows="6" style="font-size:12px"></textarea><button class="btn pri block" id="impG">Restaurar</button></div>`, ()=>{
+    $("#impF").onchange = ()=>{ const f = $("#impF").files[0]; if(!f) return; f.text().then(t=>{ $("#impT").value = t; $("#impG").click(); }); };
+    $("#impG").onclick = ()=>{ try{ const d = JSON.parse($("#impT").value); if(d.app!=="NEXO"||!d.cfg) throw 0;
+        const oldMonths = txs.map(t=>ym(t.d)); cfg = d.cfg; txs = d.txs||[]; saveCfg(); saveMonths([...oldMonths, ...txs.map(t=>ym(t.d))]); closeSheet(); render(); toast("Datos restaurados"); }
+      catch(e){ toast("Ese texto no es una copia válida de NEXO"); } };
+  });
+}
+function wipeSheet(){
+  openSheet(`<div class="stack"><h2>Borrar todo</h2><div>Se eliminarán tus cuentas, movimientos, metas y datos del auto. No se puede deshacer.</div><button class="btn danger block" id="wY" style="background:var(--bad);color:#fff">Sí, borrar todo</button><button class="btn block" id="wN">Cancelar</button></div>`, ()=>{
+    $("#wN").onclick = closeSheet;
+    $("#wY").onclick = async ()=>{
+      const months = [...new Set(txs.map(t=>ym(t.d)))];
+      if(mode==="db"){ try{ for(const m of months) await col.doc("tx-"+m).delete(); await col.doc("cfg").delete(); }catch(e){ toast("No se pudo borrar todo. Intenta de nuevo."); return; } }
+      if(mode==="local"){ try{ localStorage.removeItem("nexo-v1"); }catch(e){} }
+      cfg = null; txs = []; closeSheet(); render();
+    };
+  });
+}
+
+function budgetSheet(cat){
+  const isNew = !cat; const cur = cat ? (cfg.budgets||{})[cat] : 0;
+  openSheet(`<div class="stack"><h2>${isNew?"Nuevo presupuesto":"Presupuesto de "+esc(cat)}</h2>
+    <div class="field"><label>Categoría</label><select class="inp" id="bC" ${isNew?"":"disabled"}>${catOpts("gasto", cat)}</select></div>
+    <div class="field"><label>Tope al mes (S/)</label><input class="inp" id="bL" inputmode="decimal" value="${cur?(cur/100).toFixed(2):""}"></div>
+    <div class="hint">Te avisa en el Asistente cuando llegues al 80%.</div>
+    <button class="btn pri block" id="bS">Guardar</button>${isNew?"":`<button class="btn danger" id="bD">Quitar presupuesto</button>`}</div>`, ()=>{
+    $("#bS").onclick = ()=>{ const l = toCents($("#bL").value); if(!(l>0)){ toast("Escribe el tope"); return; } cfg.budgets ||= {}; cfg.budgets[$("#bC").value] = l; saveCfg(); closeSheet(); render(); toast("Presupuesto guardado"); };
+    if(!isNew) $("#bD").onclick = ()=>{ delete cfg.budgets[cat]; saveCfg(); closeSheet(); render(); };
+  });
+}
+function fixedSheet(f){
+  const isNew = !f; f = f ? JSON.parse(JSON.stringify(f)) : {id:uid(), name:"", a:0, day:1, cat:"Servicios", acc:(cfg.accounts.find(a=>a.type==="banco")||cfg.accounts[0])?.id, paid:[]};
+  openSheet(`<div class="stack"><h2>${isNew?"Nuevo pago fijo":"Pago fijo"}</h2>
+    <div class="field"><label>Nombre</label><input class="inp" id="xN" value="${esc(f.name)}" placeholder="Alquiler, internet, Netflix…"></div>
+    <div class="grid2"><div class="field"><label>Monto (S/)</label><input class="inp" id="xA" inputmode="decimal" value="${f.a?(f.a/100).toFixed(2):""}"></div><div class="field"><label>Día de pago</label><input class="inp" id="xD" inputmode="numeric" value="${f.day||""}"></div></div>
+    <div class="field"><label>Categoría</label><select class="inp" id="xC">${catOpts("gasto", f.cat)}</select></div>
+    <div class="field"><label>Se paga con</label><select class="inp" id="xAc">${accOpts(f.acc)}</select></div>
+    <button class="btn pri block" id="xS">Guardar</button>${isNew?"":`<button class="btn danger" id="xDel">Eliminar</button>`}</div>`, ()=>{
+    $("#xN").addEventListener("input", ()=>{ const g = guessCat($("#xN").value,"gasto"); if(g) $("#xC").value = g; });
+    $("#xS").onclick = ()=>{ f.name = $("#xN").value.trim()||"Pago fijo"; f.a = toCents($("#xA").value)||0; f.day = Math.min(31,Math.max(1,parseInt($("#xD").value)||1)); f.cat = $("#xC").value; f.acc = $("#xAc").value;
+      if(!(f.a>0)){ toast("Escribe el monto"); return; }
+      cfg.fixed ||= []; if(isNew) cfg.fixed.push(f); else cfg.fixed = cfg.fixed.map(x=>x.id===f.id?f:x); saveCfg(); closeSheet(); render(); toast("Pago fijo guardado"); };
+    if(!isNew) $("#xDel").onclick = ()=>{ cfg.fixed = cfg.fixed.filter(x=>x.id!==f.id); saveCfg(); closeSheet(); render(); };
+  });
+}
+function markFixedPaid(id){
+  const f = (cfg.fixed||[]).find(x=>x.id===id); if(!f) return; const m = ym(today());
+  const t = {id:uid(), t:"gasto", a:f.a, d:limaNow(), desc:f.name, cat:f.cat||"Otros", acc:f.acc, src:"fijo"};
+  txs.push(t); (f.paid ||= []).push(m); f.paid = f.paid.slice(-24);
+  saveMonths([ym(t.d)]); saveCfg(); render(); toast(`${f.name} pagado: ${money(f.a)}`);
+}
+// ---- PIN lock (privacy lock on this device; data itself is not encrypted)
+const hasPin = () => { try{ return !!localStorage.getItem("nexo-pin"); }catch(e){ return false; } };
+async function hashPin(p){
+  const txt = "nexo:" + p;
+  if(window.crypto?.subtle){ const h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(txt)); return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
+  let h = 5381; for(const ch of txt) h = ((h<<5)+h+ch.charCodeAt(0))>>>0; return "d"+h.toString(16);
+}
+let locked = false, hiddenAt = 0;
+function showLock(){
+  if(!hasPin() || locked) return; locked = true;
+  const el = document.createElement("div"); el.id = "lock";
+  el.style.cssText = "position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:max(24px,env(safe-area-inset-top,0px)) 16px max(24px,env(safe-area-inset-bottom,0px))";
+  el.innerHTML = `<div class="brand" style="font-size:20px">NE<i>X</i>O</div><div class="sub" id="lkMsg">Ingresa tu PIN</div>
+    <div class="row" id="lkDots" style="gap:14px">${"<span></span>".repeat(4)}</div>
+    <div style="display:grid;grid-template-columns:repeat(3,72px);gap:14px">${[1,2,3,4,5,6,7,8,9,"",0,"⌫"].map(k=>k===""?"<span></span>":`<button class="btn" data-k="${k}" style="height:72px;border-radius:50%;font-size:24px;font-family:var(--display)">${k}</button>`).join("")}</div>
+    <button class="link" id="lkForgot">Olvidé mi PIN</button><div id="lkF" hidden class="card stack" style="max-width:340px;text-align:center"><div>El PIN no se puede recuperar. Puedes borrar todos los datos de NEXO en este iPhone y empezar de nuevo (o restaurar una copia de seguridad).</div><button class="btn danger" id="lkWipe">Borrar todo y empezar de nuevo</button></div>`;
+  document.body.appendChild(el);
+  let entry = "";
+  const dots = () => el.querySelectorAll("#lkDots span").forEach((d,i)=>{ d.style.cssText = `width:14px;height:14px;border-radius:50%;border:2px solid var(--accent);background:${i<entry.length?"var(--accent)":"transparent"}`; });
+  dots();
+  el.addEventListener("click", async e=>{
+    const k = e.target.closest("[data-k]")?.dataset.k; if(k===undefined) return;
+    if(k==="⌫") entry = entry.slice(0,-1); else if(entry.length<4) entry += k;
+    dots();
+    if(entry.length===4){ let ok=false; try{ ok = (await hashPin(entry)) === localStorage.getItem("nexo-pin"); }catch(e){}
+      if(ok){ el.remove(); locked = false; } else { entry=""; dots(); el.querySelector("#lkMsg").textContent = "PIN incorrecto"; } }
+  });
+  el.querySelector("#lkForgot").onclick = ()=>{ el.querySelector("#lkF").hidden = false; };
+  el.querySelector("#lkWipe").onclick = ()=>{ try{ localStorage.removeItem("nexo-pin"); if(mode==="local") localStorage.removeItem("nexo-v1"); }catch(e){} if(mode==="local"){ cfg=null; txs=[]; } el.remove(); locked=false; render(); };
+}
+document.addEventListener("visibilitychange", ()=>{ if(document.hidden) hiddenAt = Date.now(); else if(hiddenAt && Date.now()-hiddenAt > 60000) showLock(); });
+function pinSheet(){
+  openSheet(`<div class="stack"><h2>PIN de bloqueo</h2><div class="hint">NEXO pedirá estos 4 dígitos al abrirse y si la dejas más de 1 minuto. Si lo olvidas, solo puedes borrar los datos y restaurar una copia.</div>
+    <div class="grid2"><div class="field"><label>Nuevo PIN</label><input class="inp" id="p1" inputmode="numeric" maxlength="4" type="password" autocomplete="off"></div><div class="field"><label>Repítelo</label><input class="inp" id="p2" inputmode="numeric" maxlength="4" type="password" autocomplete="off"></div></div>
+    <button class="btn pri block" id="pS">Guardar PIN</button>${hasPin()?`<button class="btn danger" id="pD">Quitar PIN</button>`:""}</div>`, ()=>{
+    $("#pS").onclick = async ()=>{ const a = $("#p1").value, b = $("#p2").value; if(!/^\d{4}$/.test(a)){ toast("El PIN debe tener 4 números"); return; } if(a!==b){ toast("Los PIN no coinciden"); return; }
+      try{ localStorage.setItem("nexo-pin", await hashPin(a)); toast("PIN guardado"); }catch(e){ toast("No se pudo guardar el PIN"); } closeSheet(); render(); };
+    if(hasPin()) $("#pD").onclick = ()=>{ try{ localStorage.removeItem("nexo-pin"); }catch(e){} closeSheet(); render(); toast("PIN quitado"); };
+  });
+}
+const canDownload = () => mode!=="db" && !window.claude;
+function downloadBackup(){
+  const data = JSON.stringify({app:"NEXO", v:1, exported:limaNow(), cfg, txs});
+  const url = URL.createObjectURL(new Blob([data],{type:"application/json"}));
+  const a = document.createElement("a"); a.href = url; a.download = `nexo-copia-${today()}.json`; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 4000);
+  try{ localStorage.setItem("nexo-lastbackup", today()); }catch(e){}
+  toast("Copia descargada");
+}
+
+// ---------- events ----------
+document.addEventListener("click", e=>{
+  const el = e.target.closest("[data-act],[data-edit],[data-acc],[data-pay],[data-goal],[data-contrib],[data-rem],[data-ft],[data-budget],[data-fixed],[data-fixpaid]");
+  if(!el) return;
+  const d = el.dataset;
+  if(d.edit){ const t = txs.find(x=>x.id===d.edit); if(t){ txSheet(t); if(t.t==="devolucion"||t.t==="ajuste"){ const seg=$("#sheetIn .seg"); if(seg) seg.outerHTML=`<div style="text-align:center;font-weight:600">${TYPE_LBL[t.t]}</div>`; } } return; }
+  if(d.acc){ accSheet(acc(d.acc)); return; }
+  if(d.pay){ const c = cardCycle(acc(d.pay)); txSheet(null,{t:"transfer", to:d.pay, acc:(cfg.accounts.find(a=>a.type==="banco")||cfg.accounts.find(a=>a.type!=="tarjeta"))?.id}); if(c.toPay) $("#tAmt").value=(c.toPay/100).toFixed(2); if($("#tDesc")) $("#tDesc").value="Pago "+acc(d.pay).name; return; }
+  if(d.goal){ goalSheet(cfg.goals.find(g=>g.id===d.goal)); return; }
+  if(d.contrib){ contribSheet(cfg.goals.find(g=>g.id===d.contrib)); return; }
+  if(d.rem){ remSheet(cfg.reminders.find(r=>r.id===d.rem)); return; }
+  if(d.ft){ movFilter.t = d.ft; render(); return; }
+  if(d.budget){ budgetSheet(d.budget); return; }
+  if(d.fixed){ fixedSheet(cfg.fixed.find(f=>f.id===d.fixed)); return; }
+  if(d.fixpaid){ markFixedPaid(d.fixpaid); return; }
+  switch(d.act){
+    case "theme": { const r = document.documentElement; const dark = r.dataset.theme ? r.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches; r.dataset.theme = dark?"light":"dark"; try{ localStorage.setItem("nexo-theme", r.dataset.theme); }catch(e){} break; }
+    case "demo": enterDemo(); break;
+    case "exitdemo": exitDemo(); break;
+    case "mprev": movMonth = addMonths(movMonth,-1); render(); break;
+    case "mnext": movMonth = addMonths(movMonth,1); render(); break;
+    case "newacc": accSheet(null); break;
+    case "newgoal": goalSheet(null); break;
+    case "vehicle": vehicleSheet(); break;
+    case "fuel": txSheet({t:"gasto",a:0,d:limaNow(),desc:"",cat:"Combustible",acc:(cfg.accounts.find(a=>a.type==="tarjeta")||cfg.accounts[0]).id,fuel:{q:"",km:"",station:""}, _new:true}); break;
+    case "newrem": remSheet(null); break;
+    case "export": exportSheet(); break;
+    case "import": importSheet(); break;
+    case "wipe": wipeSheet(); break;
+    case "newbudget": budgetSheet(null); break;
+    case "newfixed": fixedSheet(null); break;
+    case "pin": pinSheet(); break;
+    case "download": downloadBackup(); break;
+  }
+});
+document.addEventListener("input", e=>{
+  if(e.target.id==="mSearch"){ movFilter.q = e.target.value; render(); }
+});
+document.addEventListener("change", e=>{
+  if(e.target.id==="fAcc"){ movFilter.acc = e.target.value; render(); }
+  if(e.target.id==="fCat"){ movFilter.cat = e.target.value; render(); }
+});
+document.addEventListener("submit", e=>{
+  if(e.target.id!=="setup") return; e.preventDefault();
+  const accounts = [...e.target.querySelectorAll("[data-sa]")].map(div=>{
+    const g = n => div.querySelector(`[name=${n}]`)?.value || "";
+    const type = div.dataset.type, a = {id:div.dataset.sa, name:g("name").trim()||ACC_LBL[type], type};
+    const b = toCents(g("bal")) || 0;
+    const base = SETUP_ACCOUNTS.find(x=>x.id===a.id) || {};
+    if(type==="tarjeta"){ Object.assign(a, {tea:0, fee:0}, base, {name:a.name}); delete a.hint; a.bank = div.dataset.bank; a.initial = -Math.abs(b); a.limit = toCents(g("limit"))||0; a.closeDay = Math.min(31,Math.max(1,parseInt(g("close"))||1)); a.payDay = Math.min(31,Math.max(1,parseInt(g("pay"))||1)); }
+    else { a.initial = b; if(base.minBal) a.minBal = base.minBal; }
+    return a;
+  });
+  cfg = {v:1, accounts, goals:[], vehicle:{unidad:"gal"}, reminders:[]};
+  saveCfg(); location.hash = "#inicio"; render(); toast("¡Listo! Ya puedes registrar tus movimientos");
+});
+$("#addBtn").addEventListener("click", ()=>txSheet(null));
+$("#scrim").addEventListener("click", closeSheet);
+window.addEventListener("hashchange", render);
+try{ const th = localStorage.getItem("nexo-theme"); if(th) document.documentElement.dataset.theme = th; }catch(e){}
+
+// fuel sheet opened from "Registrar carga": treat preset as new
+const _txSheet = txSheet;
+txSheet = function(existing, preset){ if(existing && existing._new){ const ex = {...existing}; delete ex._new; return _txSheetNewFuel(ex); } return _txSheet(existing, preset); };
+function _txSheetNewFuel(seed){
+  // open the normal sheet in fuel mode without binding it to an existing record
+  _txSheet(null, {t:"gasto", acc: seed.acc});
+  const b = document.querySelector('#sheetIn [data-kind="fuel"]'); if(b) b.click();
+}
+boot();
+})();
+</script>
+
+<script>if("serviceWorker" in navigator && location.protocol==="https:"){navigator.serviceWorker.register("sw.js");}</script>
+</body></html>
